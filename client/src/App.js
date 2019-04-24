@@ -1,73 +1,65 @@
-import React, { Component } from "react";
-import BettingContract from "./contracts/Betting.json";
-import getWeb3 from "./utils/getWeb3";
-
+import getWeb3 from './utils/getWeb3.js';
+import {Container, Row, Col, Button} from 'react-bootstrap';
+//import TeamA from './components/TeamA.jsx';
+//import TeamB from './components/TeamB.jsx';
+import React, {Component} from 'react';
+import logo from './logo.svg';
 import "./App.css";
 
 class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null };
 
-  componentDidMount = async () => {
-    try {
-      // Get network provider and web3 instance.
-      const web3 = await getWeb3();
+    constructor() {
+        super(); //This is needed in every constructor to allow the use of 'this'
 
-      // Use web3 to get the user's accounts.
-      const accounts = await web3.eth.getAccounts();
-
-      // Get the contract instance.
-      const networkId = await web3.eth.net.getId();
-      const deployedNetwork = BettingContract.networks[networkId];
-      const instance = new web3.eth.Contract(
-        BettingContract.abi,
-        deployedNetwork && deployedNetwork.address,
-      );
-
-      // Set web3, accounts, and contract to the state, and then proceed with an
-      // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract: instance }, this.runExample);
-    } catch (error) {
-      // Catch any errors for any of the above operations.
-      alert(
-        `Failed to load web3, accounts, or contract. Check console for details.`,
-      );
-      console.error(error);
+        //We define the two variables we need in the state of our component, so they can be updated
+        this.state = {
+            web3: '',
+            address: '',
+        };
     }
-  };
 
-  runExample = async () => {
-    const { accounts, contract } = this.state;
 
-    // Stores a given value, 5 by default.
-    await contract.methods.set(5).send({ from: accounts[0] });
-
-    // Get the value from the contract to prove it worked.
-    const response = await contract.methods.get().call();
-
-    // Update state with the result.
-    this.setState({ storageValue: response });
-  };
-
-  render() {
-    if (!this.state.web3) {
-      return <div>Loading Web3, accounts, and contract...</div>;
+    componentDidMount() {
+        getWeb3.then(results => {
+            /*After getting web3, we save the informations of the web3 user by
+            editing the state variables of the component */
+            results.web3.eth.getAccounts((error, acc) => {
+                //this.setState is used to edit the state variables
+                this.setState({
+                    address: acc[0],
+                    web3: results.web3
+                })
+            });
+        }).catch(() => {
+            //If no web3 provider was found, log it in the console
+            console.log('Error finding web3.')
+        })
     }
-    return (
-      <div className="App">
-        <h1>Good to Go!</h1>
-        <p>Your Truffle Box is installed and ready.</p>
-        <h2>Smart Contract Example</h2>
-        <p>
-          If your contracts compiled and migrated successfully, below will show
-          a stored value of 5 (by default).
-        </p>
-        <p>
-          Try changing the value stored on <strong>line 40</strong> of App.js.
-        </p>
-        <div>The stored value is: {this.state.storageValue}</div>
-      </div>
-    );
-  }
+
+    render() {
+        return (
+            <div className="App">
+
+                <header className="App-header">
+                    <img src={logo} className="App-logo" alt="logo"/>
+                    <h1 className="App-title">Bet-eth</h1>
+                </header>
+                <div>
+                    Welcome on my Ethereum Betting website <br/>
+                    Your Wallet address is {this.state.address}
+                </div>
+                <Container>
+                    {/*corresponding to class="row"*/}
+                    <Row>
+                        {/* we define the two columns. The bootstrap grid is divided by 12
+            parts so if we want two columns, they will take 6 parts each */}
+                        <Col xs={6} sm={6}>A {/*We will import Team A component here */}</Col>
+                        <Col xs={6} sm={6}>B {/*We will import Team B component here */}</Col>
+                    </Row>
+                </Container>
+            </div>
+        );
+    }
 }
 
 export default App;
