@@ -17,19 +17,23 @@ class App extends Component {
         if (typeof window.web3 === "undefined" && typeof window.ethereum === "undefined") {
             this.setState({loadingState: "noProvider"});
             return;
-        }
-        else {
+        } else {
             web3Provider = new Web3(window.web3.currentProvider);
         }
 
         // Get Account
         this.setState({loadingState: "awaitAuth"});
         window.ethereum.enable();
-        web3Provider.eth.getAccounts().then(accounts => { 
+        web3Provider.eth.getAccounts().then(accounts => {
             console.log(accounts);
-            this.setState({loadingState: "loaded"});
+            if (accounts.length === 0) {
+                this.setState({loadingState: "noAuth"});
+            } else {
+                this.setState({loadingState: "loaded"});
+            }
+        }).catch((reason) => {
+            console.log(reason);
         });
-
 
 
     }
@@ -38,27 +42,22 @@ class App extends Component {
         let stateRender;
         switch (this.state.loadingState) {
             case "detectProvider":
-                stateRender = <strong>Detecting Web3 provider...</strong>;
-                break;
+                return <strong>Detecting Web3 provider...</strong>;
             case "noProvider":
-                stateRender = <strong>'No web3 provider found!</strong>;
-                break;
+                return <strong>No web3 provider found!</strong>;
             case "awaitAuth":
-                stateRender = <strong>Awaiting permission from MetaMask</strong>;
-                break;
+                return <strong>Awaiting permission from MetaMask</strong>;
+            case "noAuth":
+                return <strong>You are not logged in MetaMask!</strong>;
             case "loaded":
-                stateRender = (
+                return (
                     <div className="App">
                         <SiteNavbar/>
                         <br/>
                         <strong>Web3 is loaded!</strong>
                     </div>
-
                 );
-                break;
         }
-
-        return stateRender;
     }
 }
 
