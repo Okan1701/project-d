@@ -23,4 +23,12 @@ contract RouletteContract {
     function win() public {
         msg.sender.transfer(totalBetValue);
     }
+    
+    function getPlayers() public view returns (address[] memory players) {
+        return players;
+    }
+    
+    function getTotalBetValue() public view returns (uint256 totalBetValue) {
+        return totalBetValue;
+    }
 }

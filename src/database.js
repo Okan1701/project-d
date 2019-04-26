@@ -10,7 +10,15 @@ export async function createMatchEntry(match) {
         body: JSON.stringify(match)
     });
     
-    console.log(await response.request);
-    
     return response.ok;
+}
+
+export async function getMatches() {
+    let response = await fetch(API_URL + "/api/matches/");
+
+    if (!response.ok) {
+        throw `Failed to retrieve match data! (${response.status});`
+    }
+
+    return await response.json();
 }

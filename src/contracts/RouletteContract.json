@@ -18,7 +18,8 @@
       ],
       "payable": false,
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "signature": "0x4251ea3c"
     },
     {
       "constant": true,
@@ -32,7 +33,8 @@
       ],
       "payable": false,
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "signature": "0x4ce01d86"
     },
     {
       "constant": true,
@@ -46,7 +48,8 @@
       ],
       "payable": false,
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "signature": "0x8da5cb5b"
     },
     {
       "constant": true,
@@ -65,13 +68,15 @@
       ],
       "payable": false,
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "signature": "0xf71d96cb"
     },
     {
       "inputs": [],
       "payable": true,
       "stateMutability": "payable",
-      "type": "constructor"
+      "type": "constructor",
+      "signature": "constructor"
     },
     {
       "constant": false,
@@ -80,7 +85,8 @@
       "outputs": [],
       "payable": true,
       "stateMutability": "payable",
-      "type": "function"
+      "type": "function",
+      "signature": "0x27b5db8a"
     },
     {
       "constant": false,
@@ -89,24 +95,55 @@
       "outputs": [],
       "payable": false,
       "stateMutability": "nonpayable",
-      "type": "function"
+      "type": "function",
+      "signature": "0x473ca96c"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getPlayers",
+      "outputs": [
+        {
+          "name": "players",
+          "type": "address[]"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function",
+      "signature": "0x8b5b9ccc"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getTotalBetValue",
+      "outputs": [
+        {
+          "name": "totalBetValue",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function",
+      "signature": "0x411ccaec"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.5.7+commit.6da8b019\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":false,\"inputs\":[],\"name\":\"addPlayer\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"\",\"type\":\"address\"}],\"name\":\"playerBet\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"win\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"totalBetValue\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"players\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"constructor\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/Okan Emeni/Documents/Projects/eth-react/contracts/RouletteContract.sol\":\"RouletteContract\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/Okan Emeni/Documents/Projects/eth-react/contracts/RouletteContract.sol\":{\"keccak256\":\"0x76a89e9e8ea49d1eaae273a8e9ea9b951778f409b20c8c03515bb4a30d18836a\",\"urls\":[\"bzzr://17674caa3585aa8bff05078c63510b7d69df10601e6a6c2478651834f9ba8589\"]}},\"version\":1}",
-  "bytecode": "0x608060405260086040519080825280602002602001820160405280156100345781602001602082028038833980820191505090505b506000908051906020019061004a929190610150565b50600060025533600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060003390806001815401808255809150509060018203906000526020600020016000909192909190916101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550503460026000828254019250508190555034600360003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208190555061021d565b8280548282559060005260206000209081019282156101c9579160200282015b828111156101c85782518260006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555091602001919060010190610170565b5b5090506101d691906101da565b5090565b61021a91905b8082111561021657600081816101000a81549073ffffffffffffffffffffffffffffffffffffffff0219169055506001016101e0565b5090565b90565b6103ad8061022c6000396000f3fe608060405260043610610072576000357c01000000000000000000000000000000000000000000000000000000009004806327b5db8a146100775780634251ea3c14610081578063473ca96c146100e65780634ce01d86146100fd5780638da5cb5b14610128578063f71d96cb1461017f575b600080fd5b61007f6101fa565b005b34801561008d57600080fd5b506100d0600480360360208110156100a457600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506102b6565b6040518082815260200191505060405180910390f35b3480156100f257600080fd5b506100fb6102ce565b005b34801561010957600080fd5b50610112610319565b6040518082815260200191505060405180910390f35b34801561013457600080fd5b5061013d61031f565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34801561018b57600080fd5b506101b8600480360360208110156101a257600080fd5b8101908080359060200190929190505050610345565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60003390806001815401808255809150509060018203906000526020600020016000909192909190916101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505034600360003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208190555034600260008282540192505081905550565b60036020528060005260406000206000915090505481565b3373ffffffffffffffffffffffffffffffffffffffff166108fc6002549081150290604051600060405180830381858888f19350505050158015610316573d6000803e3d6000fd5b50565b60025481565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000818154811061035257fe5b906000526020600020016000915054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fea165627a7a72305820f96197ad00f972ea74b89b20fafdbe2f914c5cebe60c6e3ff1aed90f28d4c6c50029",
-  "deployedBytecode": "0x608060405260043610610072576000357c01000000000000000000000000000000000000000000000000000000009004806327b5db8a146100775780634251ea3c14610081578063473ca96c146100e65780634ce01d86146100fd5780638da5cb5b14610128578063f71d96cb1461017f575b600080fd5b61007f6101fa565b005b34801561008d57600080fd5b506100d0600480360360208110156100a457600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff1690602001909291905050506102b6565b6040518082815260200191505060405180910390f35b3480156100f257600080fd5b506100fb6102ce565b005b34801561010957600080fd5b50610112610319565b6040518082815260200191505060405180910390f35b34801561013457600080fd5b5061013d61031f565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34801561018b57600080fd5b506101b8600480360360208110156101a257600080fd5b8101908080359060200190929190505050610345565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60003390806001815401808255809150509060018203906000526020600020016000909192909190916101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505034600360003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208190555034600260008282540192505081905550565b60036020528060005260406000206000915090505481565b3373ffffffffffffffffffffffffffffffffffffffff166108fc6002549081150290604051600060405180830381858888f19350505050158015610316573d6000803e3d6000fd5b50565b60025481565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000818154811061035257fe5b906000526020600020016000915054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fea165627a7a72305820f96197ad00f972ea74b89b20fafdbe2f914c5cebe60c6e3ff1aed90f28d4c6c50029",
-  "sourceMap": "27:640:1:-;;;101:1;87:16;;;;;;;;;;;;;;;;;;;;;;29:2:-1;21:6;17:15;117:4;105:10;97:6;88:34;148:4;140:6;136:17;126:27;;0:157;87:16:1;;;;60:43;;;;;;;;;;;;;:::i;:::-;;168:1;137:32;;279:10;271:5;;:18;;;;;;;;;;;;;;;;;;300:7;313:10;300:24;;39:1:-1;33:3;27:10;23:18;57:10;52:3;45:23;79:10;72:17;;0:93;300:24:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;352:9;335:13;;:26;;;;;;;;;;;396:9;372;:21;382:10;372:21;;;;;;;;;;;;;;;:33;;;;27:640;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;:::o;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;:::-;;;;;;;",
-  "deployedSourceMap": "27:640:1:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;421:160;;;:::i;:::-;;178:44;;8:9:-1;5:2;;;30:1;27;20:12;5:2;178:44:1;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;178:44:1;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;589:75;;8:9:-1;5:2;;;30:1;27;20:12;5:2;589:75:1;;;:::i;:::-;;137:32;;8:9:-1;5:2;;;30:1;27;20:12;5:2;137:32:1;;;:::i;:::-;;;;;;;;;;;;;;;;;;;110:20;;8:9:-1;5:2;;;30:1;27;20:12;5:2;110:20:1;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;60:43;;8:9:-1;5:2;;;30:1;27;20:12;5:2;60:43:1;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;60:43:1;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;421:160;468:7;481:10;468:24;;39:1:-1;33:3;27:10;23:18;57:10;52:3;45:23;79:10;72:17;;0:93;468:24:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;527:9;503;:21;513:10;503:21;;;;;;;;;;;;;;;:33;;;;564:9;547:13;;:26;;;;;;;;;;;421:160::o;178:44::-;;;;;;;;;;;;;;;;;:::o;589:75::-;622:10;:19;;:34;642:13;;622:34;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;622:34:1;589:75::o;137:32::-;;;;:::o;110:20::-;;;;;;;;;;;;;:::o;60:43::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o",
-  "source": "pragma solidity ^0.5.7;\r\n\r\ncontract RouletteContract {\r\n    address[] public players = new address[](8);\r\n    address public owner;\r\n    uint256 public totalBetValue = 0;\r\n\r\n    mapping(address => uint256) public playerBet;\r\n\r\n    constructor() public payable {\r\n        owner = msg.sender;\r\n        players.push(msg.sender);\r\n        totalBetValue += msg.value;\r\n        playerBet[msg.sender] = msg.value;\r\n    }\r\n\r\n    function addPlayer() public payable {\r\n        players.push(msg.sender);\r\n        playerBet[msg.sender] = msg.value;\r\n        totalBetValue += msg.value;\r\n    }\r\n\r\n    function win() public {\r\n        msg.sender.transfer(totalBetValue);\r\n    }\r\n}",
+  "metadata": "{\"compiler\":{\"version\":\"0.5.7+commit.6da8b019\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":false,\"inputs\":[],\"name\":\"addPlayer\",\"outputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getTotalBetValue\",\"outputs\":[{\"name\":\"totalBetValue\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"\",\"type\":\"address\"}],\"name\":\"playerBet\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"win\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"totalBetValue\",\"outputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"getPlayers\",\"outputs\":[{\"name\":\"players\",\"type\":\"address[]\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"players\",\"outputs\":[{\"name\":\"\",\"type\":\"address\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"payable\":true,\"stateMutability\":\"payable\",\"type\":\"constructor\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/C/Users/Okan Emeni/Documents/Projects/eth-react/contracts/RouletteContract.sol\":\"RouletteContract\"},\"evmVersion\":\"byzantium\",\"libraries\":{},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/C/Users/Okan Emeni/Documents/Projects/eth-react/contracts/RouletteContract.sol\":{\"keccak256\":\"0x764fbb75fa9e75aad98ed8ed4daf6d3b5e8a78e1ed506965f033f27c74f5f8ee\",\"urls\":[\"bzzr://9c0b10a75b444cf50354eceef8c16eaf1d12352b4d2b19e8c0917beb6d85d938\"]}},\"version\":1}",
+  "bytecode": "0x608060405260086040519080825280602002602001820160405280156100345781602001602082028038833980820191505090505b506000908051906020019061004a929190610150565b50600060025533600160006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555060003390806001815401808255809150509060018203906000526020600020016000909192909190916101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff160217905550503460026000828254019250508190555034600360003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208190555061021d565b8280548282559060005260206000209081019282156101c9579160200282015b828111156101c85782518260006101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff16021790555091602001919060010190610170565b5b5090506101d691906101da565b5090565b61021a91905b8082111561021657600081816101000a81549073ffffffffffffffffffffffffffffffffffffffff0219169055506001016101e0565b5090565b90565b61047a8061022c6000396000f3fe608060405260043610610098576000357c0100000000000000000000000000000000000000000000000000000000900480634ce01d861161006b5780634ce01d861461014e5780638b5b9ccc146101795780638da5cb5b146101e5578063f71d96cb1461023c57610098565b806327b5db8a1461009d578063411ccaec146100a75780634251ea3c146100d2578063473ca96c14610137575b600080fd5b6100a56102b7565b005b3480156100b357600080fd5b506100bc610373565b6040518082815260200191505060405180910390f35b3480156100de57600080fd5b50610121600480360360208110156100f557600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919050505061037b565b6040518082815260200191505060405180910390f35b34801561014357600080fd5b5061014c610393565b005b34801561015a57600080fd5b506101636103de565b6040518082815260200191505060405180910390f35b34801561018557600080fd5b5061018e6103e4565b6040518080602001828103825283818151815260200191508051906020019060200280838360005b838110156101d15780820151818401526020810190506101b6565b505050509050019250505060405180910390f35b3480156101f157600080fd5b506101fa6103ec565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34801561024857600080fd5b506102756004803603602081101561025f57600080fd5b8101908080359060200190929190505050610412565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60003390806001815401808255809150509060018203906000526020600020016000909192909190916101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505034600360003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208190555034600260008282540192505081905550565b600080905090565b60036020528060005260406000206000915090505481565b3373ffffffffffffffffffffffffffffffffffffffff166108fc6002549081150290604051600060405180830381858888f193505050501580156103db573d6000803e3d6000fd5b50565b60025481565b606080905090565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000818154811061041f57fe5b906000526020600020016000915054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fea165627a7a723058205c14417d20694579a96c2d082547f4959e3d21ed22f9df83a49162ae9ff822750029",
+  "deployedBytecode": "0x608060405260043610610098576000357c0100000000000000000000000000000000000000000000000000000000900480634ce01d861161006b5780634ce01d861461014e5780638b5b9ccc146101795780638da5cb5b146101e5578063f71d96cb1461023c57610098565b806327b5db8a1461009d578063411ccaec146100a75780634251ea3c146100d2578063473ca96c14610137575b600080fd5b6100a56102b7565b005b3480156100b357600080fd5b506100bc610373565b6040518082815260200191505060405180910390f35b3480156100de57600080fd5b50610121600480360360208110156100f557600080fd5b81019080803573ffffffffffffffffffffffffffffffffffffffff16906020019092919050505061037b565b6040518082815260200191505060405180910390f35b34801561014357600080fd5b5061014c610393565b005b34801561015a57600080fd5b506101636103de565b6040518082815260200191505060405180910390f35b34801561018557600080fd5b5061018e6103e4565b6040518080602001828103825283818151815260200191508051906020019060200280838360005b838110156101d15780820151818401526020810190506101b6565b505050509050019250505060405180910390f35b3480156101f157600080fd5b506101fa6103ec565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b34801561024857600080fd5b506102756004803603602081101561025f57600080fd5b8101908080359060200190929190505050610412565b604051808273ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff16815260200191505060405180910390f35b60003390806001815401808255809150509060018203906000526020600020016000909192909190916101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505034600360003373ffffffffffffffffffffffffffffffffffffffff1673ffffffffffffffffffffffffffffffffffffffff1681526020019081526020016000208190555034600260008282540192505081905550565b600080905090565b60036020528060005260406000206000915090505481565b3373ffffffffffffffffffffffffffffffffffffffff166108fc6002549081150290604051600060405180830381858888f193505050501580156103db573d6000803e3d6000fd5b50565b60025481565b606080905090565b600160009054906101000a900473ffffffffffffffffffffffffffffffffffffffff1681565b6000818154811061041f57fe5b906000526020600020016000915054906101000a900473ffffffffffffffffffffffffffffffffffffffff168156fea165627a7a723058205c14417d20694579a96c2d082547f4959e3d21ed22f9df83a49162ae9ff822750029",
+  "sourceMap": "27:877:1:-;;;101:1;87:16;;;;;;;;;;;;;;;;;;;;;;29:2:-1;21:6;17:15;117:4;105:10;97:6;88:34;148:4;140:6;136:17;126:27;;0:157;87:16:1;;;;60:43;;;;;;;;;;;;;:::i;:::-;;168:1;137:32;;279:10;271:5;;:18;;;;;;;;;;;;;;;;;;300:7;313:10;300:24;;39:1:-1;33:3;27:10;23:18;57:10;52:3;45:23;79:10;72:17;;0:93;300:24:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;352:9;335:13;;:26;;;;;;;;;;;396:9;372;:21;382:10;372:21;;;;;;;;;;;;;;;:33;;;;27:877;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::i;:::-;;;:::o;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o;:::-;;;;;;;",
+  "deployedSourceMap": "27:877:1:-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;421:160;;;:::i;:::-;;790:111;;8:9:-1;5:2;;;30:1;27;20:12;5:2;790:111:1;;;:::i;:::-;;;;;;;;;;;;;;;;;;;178:44;;8:9:-1;5:2;;;30:1;27;20:12;5:2;178:44:1;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;178:44:1;;;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;589:75;;8:9:-1;5:2;;;30:1;27;20:12;5:2;589:75:1;;;:::i;:::-;;137:32;;8:9:-1;5:2;;;30:1;27;20:12;5:2;137:32:1;;;:::i;:::-;;;;;;;;;;;;;;;;;;;676:102;;8:9:-1;5:2;;;30:1;27;20:12;5:2;676:102:1;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;23:1:-1;8:100;33:3;30:1;27:10;8:100;;;99:1;94:3;90:11;84:18;80:1;75:3;71:11;64:39;52:2;49:1;45:10;40:15;;8:100;;;12:14;676:102:1;;;;;;;;;;;;;;;;;110:20;;8:9:-1;5:2;;;30:1;27;20:12;5:2;110:20:1;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;60:43;;8:9:-1;5:2;;;30:1;27;20:12;5:2;60:43:1;;;;;;13:2:-1;8:3;5:11;2:2;;;29:1;26;19:12;2:2;60:43:1;;;;;;;;;;;;;;;;;:::i;:::-;;;;;;;;;;;;;;;;;;;;;;;421:160;468:7;481:10;468:24;;39:1:-1;33:3;27:10;23:18;57:10;52:3;45:23;79:10;72:17;;0:93;468:24:1;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;527:9;503;:21;513:10;503:21;;;;;;;;;;;;;;;:33;;;;564:9;547:13;;:26;;;;;;;;;;;421:160::o;790:111::-;839:21;880:13;873:20;;790:111;:::o;178:44::-;;;;;;;;;;;;;;;;;:::o;589:75::-;622:10;:19;;:34;642:13;;622:34;;;;;;;;;;;;;;;;;;;;;;;;8:9:-1;5:2;;;45:16;42:1;39;24:38;77:16;74:1;67:27;5:2;622:34:1;589:75::o;137:32::-;;;;:::o;676:102::-;719:24;763:7;756:14;;676:102;:::o;110:20::-;;;;;;;;;;;;;:::o;60:43::-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:::o",
+  "source": "pragma solidity ^0.5.7;\r\n\r\ncontract RouletteContract {\r\n    address[] public players = new address[](8);\r\n    address public owner;\r\n    uint256 public totalBetValue = 0;\r\n\r\n    mapping(address => uint256) public playerBet;\r\n\r\n    constructor() public payable {\r\n        owner = msg.sender;\r\n        players.push(msg.sender);\r\n        totalBetValue += msg.value;\r\n        playerBet[msg.sender] = msg.value;\r\n    }\r\n\r\n    function addPlayer() public payable {\r\n        players.push(msg.sender);\r\n        playerBet[msg.sender] = msg.value;\r\n        totalBetValue += msg.value;\r\n    }\r\n\r\n    function win() public {\r\n        msg.sender.transfer(totalBetValue);\r\n    }\r\n    \r\n    function getPlayers() public view returns (address[] memory players) {\r\n        return players;\r\n    }\r\n    \r\n    function getTotalBetValue() public view returns (uint256 totalBetValue) {\r\n        return totalBetValue;\r\n    }\r\n}",
   "sourcePath": "C:/Users/Okan Emeni/Documents/Projects/eth-react/contracts/RouletteContract.sol",
   "ast": {
     "absolutePath": "/C/Users/Okan Emeni/Documents/Projects/eth-react/contracts/RouletteContract.sol",
     "exportedSymbols": {
       "RouletteContract": [
-        141
+        158
       ]
     },
-    "id": 142,
+    "id": 159,
     "nodeType": "SourceUnit",
     "nodes": [
       {
@@ -126,9 +163,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 141,
+        "id": 158,
         "linearizedBaseContracts": [
-          141
+          158
         ],
         "name": "RouletteContract",
         "nodeType": "ContractDefinition",
@@ -138,7 +175,7 @@
             "id": 66,
             "name": "players",
             "nodeType": "VariableDeclaration",
-            "scope": 141,
+            "scope": 158,
             "src": "60:43:1",
             "stateVariable": true,
             "storageLocation": "default",
@@ -250,7 +287,7 @@
             "id": 68,
             "name": "owner",
             "nodeType": "VariableDeclaration",
-            "scope": 141,
+            "scope": 158,
             "src": "110:20:1",
             "stateVariable": true,
             "storageLocation": "default",
@@ -277,7 +314,7 @@
             "id": 71,
             "name": "totalBetValue",
             "nodeType": "VariableDeclaration",
-            "scope": 141,
+            "scope": 158,
             "src": "137:32:1",
             "stateVariable": true,
             "storageLocation": "default",
@@ -320,7 +357,7 @@
             "id": 75,
             "name": "playerBet",
             "nodeType": "VariableDeclaration",
-            "scope": 141,
+            "scope": 158,
             "src": "178:44:1",
             "stateVariable": true,
             "storageLocation": "default",
@@ -397,7 +434,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 156,
+                        "referencedDeclaration": 173,
                         "src": "279:3:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -440,7 +477,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 156,
+                          "referencedDeclaration": 173,
                           "src": "313:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -545,7 +582,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 156,
+                        "referencedDeclaration": 173,
                         "src": "352:3:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -608,7 +645,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 156,
+                          "referencedDeclaration": 173,
                           "src": "382:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -650,7 +687,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 156,
+                        "referencedDeclaration": 173,
                         "src": "396:3:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -702,7 +739,7 @@
               "parameters": [],
               "src": "260:0:1"
             },
-            "scope": 141,
+            "scope": 158,
             "src": "231:182:1",
             "stateMutability": "payable",
             "superFunction": null,
@@ -726,7 +763,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 156,
+                          "referencedDeclaration": 173,
                           "src": "481:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -832,7 +869,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 156,
+                          "referencedDeclaration": 173,
                           "src": "513:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -874,7 +911,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 156,
+                        "referencedDeclaration": 173,
                         "src": "527:3:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -936,7 +973,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 156,
+                        "referencedDeclaration": 173,
                         "src": "564:3:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -988,7 +1025,7 @@
               "parameters": [],
               "src": "457:0:1"
             },
-            "scope": 141,
+            "scope": 158,
             "src": "421:160:1",
             "stateMutability": "payable",
             "superFunction": null,
@@ -1033,7 +1070,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 156,
+                          "referencedDeclaration": 173,
                           "src": "622:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -1107,27 +1144,196 @@
               "parameters": [],
               "src": "611:0:1"
             },
-            "scope": 141,
+            "scope": 158,
             "src": "589:75:1",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 148,
+              "nodeType": "Block",
+              "src": "745:33:1",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 146,
+                    "name": "players",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 144,
+                    "src": "763:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_memory_ptr",
+                      "typeString": "address[] memory"
+                    }
+                  },
+                  "functionReturnParameters": 145,
+                  "id": 147,
+                  "nodeType": "Return",
+                  "src": "756:14:1"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 149,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getPlayers",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 141,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "695:2:1"
+            },
+            "returnParameters": {
+              "id": 145,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 144,
+                  "name": "players",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 149,
+                  "src": "719:24:1",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$dyn_memory_ptr",
+                    "typeString": "address[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 142,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "719:7:1",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 143,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "719:9:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                      "typeString": "address[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "718:26:1"
+            },
+            "scope": 158,
+            "src": "676:102:1",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 156,
+              "nodeType": "Block",
+              "src": "862:39:1",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 154,
+                    "name": "totalBetValue",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 152,
+                    "src": "880:13:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "functionReturnParameters": 153,
+                  "id": 155,
+                  "nodeType": "Return",
+                  "src": "873:20:1"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 157,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTotalBetValue",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 150,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "815:2:1"
+            },
+            "returnParameters": {
+              "id": 153,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 152,
+                  "name": "totalBetValue",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 157,
+                  "src": "839:21:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 151,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "839:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "838:23:1"
+            },
+            "scope": 158,
+            "src": "790:111:1",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
           }
         ],
-        "scope": 142,
-        "src": "27:640:1"
+        "scope": 159,
+        "src": "27:877:1"
       }
     ],
-    "src": "0:667:1"
+    "src": "0:904:1"
   },
   "legacyAST": {
     "absolutePath": "/C/Users/Okan Emeni/Documents/Projects/eth-react/contracts/RouletteContract.sol",
     "exportedSymbols": {
       "RouletteContract": [
-        141
+        158
       ]
     },
-    "id": 142,
+    "id": 159,
     "nodeType": "SourceUnit",
     "nodes": [
       {
@@ -1147,9 +1353,9 @@
         "contractKind": "contract",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 141,
+        "id": 158,
         "linearizedBaseContracts": [
-          141
+          158
         ],
         "name": "RouletteContract",
         "nodeType": "ContractDefinition",
@@ -1159,7 +1365,7 @@
             "id": 66,
             "name": "players",
             "nodeType": "VariableDeclaration",
-            "scope": 141,
+            "scope": 158,
             "src": "60:43:1",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1271,7 +1477,7 @@
             "id": 68,
             "name": "owner",
             "nodeType": "VariableDeclaration",
-            "scope": 141,
+            "scope": 158,
             "src": "110:20:1",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1298,7 +1504,7 @@
             "id": 71,
             "name": "totalBetValue",
             "nodeType": "VariableDeclaration",
-            "scope": 141,
+            "scope": 158,
             "src": "137:32:1",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1341,7 +1547,7 @@
             "id": 75,
             "name": "playerBet",
             "nodeType": "VariableDeclaration",
-            "scope": 141,
+            "scope": 158,
             "src": "178:44:1",
             "stateVariable": true,
             "storageLocation": "default",
@@ -1418,7 +1624,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 156,
+                        "referencedDeclaration": 173,
                         "src": "279:3:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -1461,7 +1667,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 156,
+                          "referencedDeclaration": 173,
                           "src": "313:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -1566,7 +1772,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 156,
+                        "referencedDeclaration": 173,
                         "src": "352:3:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -1629,7 +1835,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 156,
+                          "referencedDeclaration": 173,
                           "src": "382:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -1671,7 +1877,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 156,
+                        "referencedDeclaration": 173,
                         "src": "396:3:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -1723,7 +1929,7 @@
               "parameters": [],
               "src": "260:0:1"
             },
-            "scope": 141,
+            "scope": 158,
             "src": "231:182:1",
             "stateMutability": "payable",
             "superFunction": null,
@@ -1747,7 +1953,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 156,
+                          "referencedDeclaration": 173,
                           "src": "481:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -1853,7 +2059,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 156,
+                          "referencedDeclaration": 173,
                           "src": "513:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -1895,7 +2101,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 156,
+                        "referencedDeclaration": 173,
                         "src": "527:3:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -1957,7 +2163,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 156,
+                        "referencedDeclaration": 173,
                         "src": "564:3:1",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -2009,7 +2215,7 @@
               "parameters": [],
               "src": "457:0:1"
             },
-            "scope": 141,
+            "scope": 158,
             "src": "421:160:1",
             "stateMutability": "payable",
             "superFunction": null,
@@ -2054,7 +2260,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 156,
+                          "referencedDeclaration": 173,
                           "src": "622:3:1",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -2128,26 +2334,202 @@
               "parameters": [],
               "src": "611:0:1"
             },
-            "scope": 141,
+            "scope": 158,
             "src": "589:75:1",
             "stateMutability": "nonpayable",
             "superFunction": null,
             "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 148,
+              "nodeType": "Block",
+              "src": "745:33:1",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 146,
+                    "name": "players",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 144,
+                    "src": "763:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_memory_ptr",
+                      "typeString": "address[] memory"
+                    }
+                  },
+                  "functionReturnParameters": 145,
+                  "id": 147,
+                  "nodeType": "Return",
+                  "src": "756:14:1"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 149,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getPlayers",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 141,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "695:2:1"
+            },
+            "returnParameters": {
+              "id": 145,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 144,
+                  "name": "players",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 149,
+                  "src": "719:24:1",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$dyn_memory_ptr",
+                    "typeString": "address[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 142,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "719:7:1",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 143,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "719:9:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                      "typeString": "address[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "718:26:1"
+            },
+            "scope": 158,
+            "src": "676:102:1",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
+          },
+          {
+            "body": {
+              "id": 156,
+              "nodeType": "Block",
+              "src": "862:39:1",
+              "statements": [
+                {
+                  "expression": {
+                    "argumentTypes": null,
+                    "id": 154,
+                    "name": "totalBetValue",
+                    "nodeType": "Identifier",
+                    "overloadedDeclarations": [],
+                    "referencedDeclaration": 152,
+                    "src": "880:13:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "functionReturnParameters": 153,
+                  "id": 155,
+                  "nodeType": "Return",
+                  "src": "873:20:1"
+                }
+              ]
+            },
+            "documentation": null,
+            "id": 157,
+            "implemented": true,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTotalBetValue",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 150,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "815:2:1"
+            },
+            "returnParameters": {
+              "id": 153,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 152,
+                  "name": "totalBetValue",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 157,
+                  "src": "839:21:1",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 151,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "839:7:1",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "838:23:1"
+            },
+            "scope": 158,
+            "src": "790:111:1",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "public"
           }
         ],
-        "scope": 142,
-        "src": "27:640:1"
+        "scope": 159,
+        "src": "27:877:1"
       }
     ],
-    "src": "0:667:1"
+    "src": "0:904:1"
   },
   "compiler": {
     "name": "solc",
     "version": "0.5.7+commit.6da8b019.Emscripten.clang"
   },
-  "networks": {},
+  "networks": {
+    "5777": {
+      "events": {},
+      "links": {},
+      "address": "0xb77673f97f25e65f4134Ecf53FcBfa704dcD1b0E",
+      "transactionHash": "0x10bc73a2179387e6205f7eed7ac874254f0ab614c9277f49fbc48261fe9de16a"
+    }
+  },
   "schemaVersion": "3.0.8",
-  "updatedAt": "2019-04-24T21:09:05.809Z",
+  "updatedAt": "2019-04-26T13:59:06.497Z",
   "devdoc": {
     "methods": {}
   },
