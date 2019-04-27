@@ -7,7 +7,7 @@ Before going any further, please confirm that you have the following installed:
 * NodeJS with a working NPM
 * Python 3.7 with PIP3 (you can check by launching cmd and typing `pip3`)
 
-#####FOR WINDOWS USERS:
+**FOR WINDOWS USERS:**
 
 Open terminal in the root folder of the project (where your package.json file is) and enter the command `npm install`
 <br><br>
@@ -25,7 +25,7 @@ The project consists of a React front-end and a Django back-end. Both need to be
 <br>
 Please make sure Ganache and MetaMask are configured and running!
 <br>
-#####To start the django back-end:
+**To start the django back-end:**
 
 FOR WINDOWS: Run the `run.bat` in the backend folder
 <br><br>
@@ -36,7 +36,7 @@ Open the terminal in the backend folder and execute the following commands in th
 <br>
 `python manage.py runserver`
 
-#####To start the React front-end:
+**To start the React front-end:**
 
 Open the root project folder in your terminal and run `truffle compile` and `npm run start`.
 <br><br>
