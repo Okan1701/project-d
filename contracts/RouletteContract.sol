@@ -1,7 +1,7 @@
 pragma solidity ^0.5.7;
 
 contract RouletteContract {
-    address[] public players = new address[](8);
+    address[] public players;
     address public owner;
     uint256 public totalBetValue = 0;
 
@@ -10,8 +10,8 @@ contract RouletteContract {
     constructor() public payable {
         owner = msg.sender;
         players.push(msg.sender);
-        totalBetValue += msg.value;
         playerBet[msg.sender] = msg.value;
+        totalBetValue += msg.value;
     }
 
     function addPlayer() public payable {
@@ -23,12 +23,12 @@ contract RouletteContract {
     function win() public {
         msg.sender.transfer(totalBetValue);
     }
-    
-    function getPlayers() public view returns (address[] memory players) {
+
+    function getPlayers() public view returns (address[] memory playersArray) {
         return players;
     }
-    
-    function getTotalBetValue() public view returns (uint256 totalBetValue) {
+
+    function getTotalBetValue() public view returns (uint256 betValue) {
         return totalBetValue;
     }
 }
