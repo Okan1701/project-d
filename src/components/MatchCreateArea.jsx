@@ -14,25 +14,29 @@ class MatchCreateArea extends Component {
     onSubmit(event) {
         event.preventDefault();
         event.stopPropagation();
+        
+        // Get the ether that the user inputted and convert to wei
         const wei = web3utils.toWei(event.target[1].value);
         const title = event.target[0].value;
 
-        console.log("Deploying");
-        console.log(event.target);
-        console.log(wei);
+        // Get the account of the user
         this.props.web3.eth.getAccounts().then((accounts) => {
+            // Create a interface of the smart contract using the JSON ABI
+            // This will be used to deploy a new instance of it
             const contract = new this.props.web3.eth.Contract(abi.abi);
             contract.deploy({data: abi.bytecode}).send({
-                from: accounts[0],
-                value: wei
+                from: accounts[0], // Account of the sender
+                value: wei // The bet value in wei
             }).then((contract) => {
-                console.log(contract);
+                // If successfull, we will store some data related to the instance in the database
+                // The contract_address is used to interact with the instance later
                 database.createMatchEntry({
                     title: title,
                     contract_address: contract.options.address,
                     start_date: "2019-05-05",
-                    end_date: "2019-05-05"
+                    end_date: "2019-05-05" // Useless for now
                 }).then((res) => {
+                    // If the return value is true, then it was saved to db
                     if (res === true) {
                         console.log("Saved to database!");
                     } else {
