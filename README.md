@@ -16,7 +16,10 @@ This will install all the required npm packages for React
 Once that is done, navigate to the /backend folder and execute the `install-venv.bat` file.<br>
 This will install the virtual python environment that django will use.
 <br><br>
-
+**FOR LINUX/MAC USERS**<br>
+The same as above, except you need to run `install-venv` file (the one without `.bat` at the end).
+<br>
+<br>
 If everything ran without any errors. Then your project is ready to go!
 
 ## How to run
@@ -29,12 +32,7 @@ Please make sure Ganache and MetaMask are configured and running!
 
 FOR WINDOWS: Run the `run.bat` in the backend folder
 <br><br>
-FOR LINUX/MAC: <br>
-Open the terminal in the backend folder and execute the following commands in the terminal:<br>
-
-`source /venv/Scripts/activate`
-<br>
-`python manage.py runserver`
+FOR LINUX/MAC: Make sure the `run` file (no file extension) and run it.
 
 **To start the React front-end:**
 
