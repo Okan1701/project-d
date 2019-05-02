@@ -2,12 +2,17 @@ import React, {Component} from "react";
 import Card from "react-bootstrap/Card";
 import Spinner from "react-bootstrap/Spinner";
 
-class LoadingCard extends Component {
-    constructor(props) {
+interface IProps {
+    text: string,
+    show: boolean
+}
+
+class LoadingCard extends Component<IProps, any> {
+    constructor(props: IProps) {
         super(props)
     }
 
-    render() {
+    public render(): React.ReactNode {
         if (this.props.show) {
             return (
                 <Card className="text-center">

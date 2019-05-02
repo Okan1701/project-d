@@ -3,9 +3,14 @@ import MainArea from "./MainArea";
 import {Route, Router, Switch} from "react-router-dom";
 import MatchCreateArea from "./MatchCreateArea";
 import MatchesArea from "./MatchesArea";
+import Web3 from "web3";
 
-class Routing extends Component {
-    render() {
+interface IProps {
+    web3: Web3
+}
+
+class Routing extends Component<IProps, any> {
+    public render(): any {
         return (
             <div className="page-content">
                 <Switch>

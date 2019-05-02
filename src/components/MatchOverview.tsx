@@ -1,6 +1,5 @@
-import React, {Component} from "react";
+import React, {Component, FormEvent} from "react";
 import LoadingCard from "./LoadingCard";
-import rouletteContractAbi from "../contracts/RouletteContract";
 import * as database from "../database";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
@@ -8,67 +7,100 @@ import * as web3utils from 'web3-utils';
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
+import Contract from "web3/eth/contract";
+import Web3 from "web3"
 
-class MatchOverview extends Component {
-    constructor(props) {
+const rouletteContractAbi = require("../contracts/RouletteContract");
+
+enum LoadingState {
+    Loading,
+    Loaded
+}
+
+interface IState {
+    loadingState: LoadingState,
+    totalBetValue: string,
+    players: string[],
+    contract?: Contract,
+    account: string,
+    isSendingBet: boolean,
+    disableFormSubmit: boolean,
+    sendBetResultMsg: string
+}
+
+interface IProps {
+    web3: Web3,
+    match: database.IMatch
+}
+
+class MatchOverview extends Component<IProps, IState> {
+    constructor(props: IProps) {
         super(props);
         this.state = {
-            loadingState: 0,
-            totalBetValue: null,
-            players: null,
-            contract: null,
-            account: null,
+            loadingState: LoadingState.Loading,
+            totalBetValue: "",
+            players: [],
+            contract: undefined,
+            account: "",
             isSendingBet: false,
             disableFormSubmit: false,
             sendBetResultMsg: ""
         }
     }
 
-    componentDidMount() {
+    public componentDidMount(): void {
         console.log("Address: " + this.props.match.contract_address);
-        this.props.web3.eth.getAccounts().then((accounts) => {
-            // Get the specific contract instance that belongs to this match using its address
-            const contractInstance = new this.props.web3.eth.Contract(rouletteContractAbi.abi, this.props.match.contract_address);
-
-            // Call the getPlayers() of the contract.
-            // Last parameter is the callback function when done
-            contractInstance.methods.getPlayers().call({from: accounts[0]}).then((result) => {
-                console.log("players: " + result);
-                this.setState({players: result});
-
-                // Call the getTotalBetValue() of the contract.
-                // Last parameter is the callback function when done
-                contractInstance.methods.getTotalBetValue().call({from: accounts[0]}).then((result) => {
-                    console.log("bet value: " + result);
-                    this.setState({
-                        totalBetValue: `${web3utils.fromWei(result)} Ether`,
-
-                        // Store some stuff that we'll need later
-                        contract: contractInstance,
-                        account: accounts[0],
-                        loadingState: 1
-                    });
-                });
-            });
-
-        });
+        // noinspection JSIgnoredPromiseFromCall
+        this.getMatchDetails();
 
     }
 
-    componentDidUpdate(prevProps, prevState, snapshot) {
-        /*
-        componentDidMount is apparently not called again when user chooses a new match in MatchesArea. 
-        So we have to manually check each component update and call componentDidMount ourselves if needed.
+    /**
+     * Get the match details by retrieving data from the relevant contract instance
+     */
+    private async getMatchDetails(): Promise<void> {
+        const accounts: string[] = await this.props.web3.eth.getAccounts();
+        
+        // Get the specific contract instance that belongs to this match using its address
+        const contractInstance: Contract = new this.props.web3.eth.Contract(rouletteContractAbi.abi, this.props.match.contract_address);
+        
+        let players: string[] = await contractInstance.methods.getPlayers().call({from: accounts[0]});
+        let betValue: string = await contractInstance.methods.getTotalBetValue().call({from: accounts[0]});
+        
+        this.setState({
+            players: players,
+            totalBetValue: `${web3utils.fromWei(betValue)} Ether`,
+            contract: contractInstance,
+            account: accounts[0],
+            loadingState: LoadingState.Loaded
+        });
+        
+    }
+
+    public componentDidUpdate(prevProps: IProps, prevState: IState, snapshot: any): void {
+        /**
+         * componentDidMount is apparently not called again when user chooses a new match in MatchesArea. 
+         * So we have to manually check each component update and call componentDidMount to load new match details.
          */
         if (prevProps.match.id !== this.props.match.id) {
-            this.setState({loadingState: 0}); // Display loading screen again!
+            this.setState({loadingState: LoadingState.Loading}); // Display loading screen again!
             this.componentDidMount();
         }
     }
 
-    onBetSubmit(event) {
+    /**
+     * Called when user clicks on the Submit button
+     * This will submit the entered bet amount
+     * @param event: Form submit event containing the form and input
+     */
+    private onBetSubmit(event: FormEvent<HTMLFormElement>): void {
+        const form: EventTarget = event.target;
+        
+        // Prevent default behavior
         event.preventDefault();
         event.stopPropagation();
+        
+        if (this.state.contract === undefined) return;
 
         // Prevent user from submitting again
         this.setState({
@@ -77,17 +109,16 @@ class MatchOverview extends Component {
         });
 
         // The bet value that was entered in the form
-        const betValue = event.target[0].value;
-        // Convert the bet value into wei which is used for the contract
-        const wei = web3utils.toWei(event.target[0].value);
+        const betValue: string = form[0].value;
+        const wei: string = web3utils.toWei(betValue);
 
-        // Get the addPlayer method ref and send a transaction to it
+        // Get the addPlayer method and send a transaction to it
         this.state.contract.methods.addPlayer().send({
             from: this.state.account,
-            value: wei
+            value: wei.toString()
         }).then((result) => {
             this.componentDidMount();
-        }, (reason) => {
+        }, (reason: string) => {
             this.setState({
                 sendBetResultMsg: "ERROR: " + reason,
                 disableFormSubmit: true,
@@ -96,7 +127,13 @@ class MatchOverview extends Component {
         })
     }
 
-    makeMeWinner() {
+
+    /**
+     * Make the currently logged in user win the match
+     * This will call 'win()' on the smart contract 
+     */
+    private makeMeWinner(): void {
+        if (this.state.contract === undefined) return;
         let method = this.state.contract.methods.win();
         method.send({from: this.state.account}).then(
             (res) => {
@@ -104,8 +141,11 @@ class MatchOverview extends Component {
             }
         )
     }
-    
-    displayForm() {
+
+    /**
+     * Display the betting form if we meet the requirements
+     */
+    private displayForm(): null | any {
         // Don't display anything if we don't have the required info
         if (this.state.account === null || this.state.players === null) return null;
         
@@ -121,7 +161,7 @@ class MatchOverview extends Component {
             }
             
             return (
-                <Form onSubmit={(e) => this.onBetSubmit(e)}>
+                <Form onSubmit={(e: FormEvent<HTMLFormElement>) => this.onBetSubmit(e)}>
                     <Form.Group>
                         <Form.Label>You can participate in this match by betting your own ether:</Form.Label>
                         <InputGroup>
@@ -131,15 +171,15 @@ class MatchOverview extends Component {
                             <Form.Control type="number" placeholder="Enter bet value here..." required/>
                         </InputGroup>
                         <br/>
-                        <Button type="submit" disabled={this.state.disableFormSubmit === true}>{loadingElement}Submit bet!</Button>
+                        <Button type="submit" disabled={this.state.disableFormSubmit}>{loadingElement}Submit bet!</Button>
                     </Form.Group>
                 </Form>
             );
         }
     }
     
-    render() {
-        if (this.state.loadingState === 0) {
+    public render(): any {
+        if (this.state.loadingState === LoadingState.Loading) {
             return <LoadingCard text="Loading match data..." show={true}/>
         } else {
             return (

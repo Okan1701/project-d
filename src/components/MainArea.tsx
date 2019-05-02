@@ -1,7 +1,16 @@
 import React, {Component} from "react";
+import Web3 from "web3"
 
-class MainArea extends Component {
-    constructor(props) {
+interface IState {
+    account: string
+}
+
+interface IProps {
+    web3: Web3
+}
+
+class MainArea extends Component<IProps, IState> {
+    constructor(props: IProps) {
         super(props);
         this.state = {
             account: "Loading..."
@@ -9,14 +18,14 @@ class MainArea extends Component {
     }
 
 
-    componentDidMount() {
-        this.props.web3.eth.getAccounts().then((accounts) => {
-            this.setState({account: accounts[0].toString()})
+    public componentDidMount(): void {
+        this.props.web3.eth.getAccounts().then((accounts: string[]) => {
+            this.setState({account: accounts[0]})
         });
     }
 
 
-    render() {
+    public render(): React.ReactNode {
         return (
             <div>
                 <h1>Main Area</h1>

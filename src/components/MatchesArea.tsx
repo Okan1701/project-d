@@ -5,60 +5,77 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import MatchOverview from "./MatchOverview";
+import Web3 from "web3"
 
-class MatchesArea extends Component {
-    constructor(props) {
+// Define properties of the component Props
+interface IProps {
+    web3: Web3
+}
+
+// Define the properties of the component State
+interface IState {
+    matches: database.IMatch[],
+    selectedMatch?: database.IMatch,
+    displayMatchDetails: boolean
+}
+
+class MatchesArea extends Component<IProps, IState> {
+    constructor(props: IProps) {
         super(props);
         this.state = {
             matches: [],
-            selectedMatch: null,
-            listState: 0, // 0 = loading, 1 = loaded, 2 = failed
+            selectedMatch: undefined,
             displayMatchDetails: false
         };
     }
-
-    componentDidMount() {
+    
+    public componentDidMount(): void {
+        // Get the matches from database
         database.getMatches().then(
-            (matches) => {
+            (matches: database.IMatch[]) => {
                 this.setState({
                     matches: matches,
-                    listState: 1
                 });
             },
-            (reason) => {
+            (reason: string) => {
                 console.log("Failed loading list: " + reason);
                 this.setState({
-                    listState: 2
                 });
             }
         );
     }
 
-    onMatchSelected(match) {
+    /**
+     * Called when user clicks on the View button of a match in the list
+     * @param match: the selected match object
+     */
+    private onMatchSelected(match: database.IMatch): void {
         this.setState({
             displayMatchDetails: true,
             selectedMatch: match
         });
     }
 
-    displayMatchDetails() {
+    /**
+     * Will display the match details if a current match is selected
+     */
+    private displayMatchDetails(): React.ReactNode {
         if (this.state.displayMatchDetails) {
-            return <MatchOverview match={this.state.selectedMatch} web3={this.props.web3}/>
-        }
-        else {
+            return <MatchOverview match={(this.state.selectedMatch as database.IMatch)} web3={this.props.web3}/>
+        } else {
             return (
                 <Card>
                     <Card.Body>
                         <Card.Title>Match details</Card.Title>
                         <p>Select a match in order to see more details and options!</p>
                     </Card.Body>
-                </Card> 
+                </Card>
             );
         }
     }
-    
-    
-    render() {
+
+
+    public render(): React.ReactNode {
         return (
             <div>
                 <Row>
