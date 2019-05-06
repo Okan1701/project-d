@@ -11,3 +11,7 @@ class Match(models.Model):
 
     def __str__(self):
         return self.title + " @ " + self.contract_address
+
+    class Meta:
+        verbose_name = 'Match'
+        verbose_name_plural = 'Matches'
