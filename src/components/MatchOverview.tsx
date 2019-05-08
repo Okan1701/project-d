@@ -9,16 +9,20 @@ import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import Contract from "web3/eth/contract";
 import Web3 from "web3"
+import ErrorCard from "./ErrorCard";
+import BN from "bn.js";
 
 const rouletteContractAbi = require("../contracts/RouletteContract");
 
 enum LoadingState {
     Loading,
-    Loaded
+    Loaded,
+    Failed
 }
 
 interface IState {
     loadingState: LoadingState,
+    errorMessage: string
     totalBetValue: string,
     players: string[],
     contract?: Contract,
@@ -38,6 +42,7 @@ class MatchOverview extends Component<IProps, IState> {
         super(props);
         this.state = {
             loadingState: LoadingState.Loading,
+            errorMessage: "N/A",
             totalBetValue: "",
             players: [],
             contract: undefined,
@@ -51,7 +56,11 @@ class MatchOverview extends Component<IProps, IState> {
     public componentDidMount(): void {
         console.log("Address: " + this.props.match.contract_address);
         // noinspection JSIgnoredPromiseFromCall
-        this.getMatchDetails();
+        this.getMatchDetails().catch(
+            (reason: string) => {
+                console.log(reason);
+            }
+        );
 
     }
 
@@ -60,26 +69,27 @@ class MatchOverview extends Component<IProps, IState> {
      */
     private async getMatchDetails(): Promise<void> {
         const accounts: string[] = await this.props.web3.eth.getAccounts();
-        
+
         // Get the specific contract instance that belongs to this match using its address
-        const contractInstance: Contract = new this.props.web3.eth.Contract(rouletteContractAbi.abi, this.props.match.contract_address);
-        
+        const contractInstance: any = new this.props.web3.eth.Contract(rouletteContractAbi.abi, this.props.match.contract_address);
+
         let players: string[] = await contractInstance.methods.getPlayers().call({from: accounts[0]});
-        let betValue: string = await contractInstance.methods.getTotalBetValue().call({from: accounts[0]});
-        
-        this.setState({
+        let betValueWei: string = await contractInstance.methods.getTotalBetValue().call({from: accounts[0]});
+        let betValueEther: string = await web3utils.fromWei(web3utils.toBN(betValueWei));
+
+        await this.setState({
             players: players,
-            totalBetValue: `${web3utils.fromWei(betValue)} Ether`,
+            totalBetValue: `${betValueEther} Ether`,
             contract: contractInstance,
             account: accounts[0],
             loadingState: LoadingState.Loaded
         });
-        
+
     }
 
     public componentDidUpdate(prevProps: IProps, prevState: IState, snapshot: any): void {
         /**
-         * componentDidMount is apparently not called again when user chooses a new match in MatchesArea. 
+         * componentDidMount is apparently not called again when user chooses a new match in MatchesArea.
          * So we have to manually check each component update and call componentDidMount to load new match details.
          */
         if (prevProps.match.id !== this.props.match.id) {
@@ -95,11 +105,11 @@ class MatchOverview extends Component<IProps, IState> {
      */
     private onBetSubmit(event: FormEvent<HTMLFormElement>): void {
         const form: EventTarget = event.target;
-        
+
         // Prevent default behavior
         event.preventDefault();
         event.stopPropagation();
-        
+
         if (this.state.contract === undefined) return;
 
         // Prevent user from submitting again
@@ -130,7 +140,7 @@ class MatchOverview extends Component<IProps, IState> {
 
     /**
      * Make the currently logged in user win the match
-     * This will call 'win()' on the smart contract 
+     * This will call 'win()' on the smart contract
      */
     private makeMeWinner(): void {
         if (this.state.contract === undefined) return;
@@ -148,18 +158,17 @@ class MatchOverview extends Component<IProps, IState> {
     private displayForm(): null | any {
         // Don't display anything if we don't have the required info
         if (this.state.account === null || this.state.players === null) return null;
-        
+
         // If account address is already in players array, then account cannot bet!
         if (this.state.players.includes(this.state.account)) {
             return <div className="font-italic">You are already part of this match!</div>
-        }
-        else {
+        } else {
             // If we are currently sending a bet, then the button will have a loading spinner
             let loadingElement;
             if (this.state.isSendingBet) {
-                loadingElement = <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                loadingElement = <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true"/>
             }
-            
+
             return (
                 <Form onSubmit={(e: FormEvent<HTMLFormElement>) => this.onBetSubmit(e)}>
                     <Form.Group>
@@ -171,17 +180,27 @@ class MatchOverview extends Component<IProps, IState> {
                             <Form.Control type="number" placeholder="Enter bet value here..." required/>
                         </InputGroup>
                         <br/>
-                        <Button type="submit" disabled={this.state.disableFormSubmit}>{loadingElement}Submit bet!</Button>
+                        <Button type="submit" disabled={this.state.disableFormSubmit}>{loadingElement}Submit
+                            bet!</Button>
                     </Form.Group>
                 </Form>
             );
         }
     }
-    
+
     public render(): any {
-        if (this.state.loadingState === LoadingState.Loading) {
-            return <LoadingCard text="Loading match data..." show={true}/>
-        } else {
+        return (
+            <div>
+                <LoadingCard text="Loading match data..." show={this.state.loadingState === LoadingState.Loading}/>
+                <ErrorCard title={"Failed loading match data!"} msg={this.state.errorMessage}
+                           show={this.state.loadingState === LoadingState.Failed}/>
+                {this.showMainComponent()}
+            </div>
+        );
+    }
+
+    private showMainComponent() {
+        if (this.state.loadingState === LoadingState.Loaded) {
             return (
                 <Card>
                     <Card.Header>Match details</Card.Header>

@@ -23,7 +23,7 @@ class MatchCreateArea extends Component<IProps, any> {
      *   This method is run when user clicks on 'Create' button
      *   This will handle form input and create a new match
      */
-    private onSubmit(event: FormEvent<HTMLFormElement>) {
+    private onSubmit(event: FormEvent<HTMLFormElement>): void {
         const form: EventTarget = event.target;
         event.preventDefault();
         event.stopPropagation();
@@ -34,15 +34,17 @@ class MatchCreateArea extends Component<IProps, any> {
         const title: string = form[0].value;
 
         this.createMatch(title, wei).then(
-            () => console.log("Match has been created!"),
-            (reason: string) => console.log(reason)
-        );
+            () => alert("Match has been created!"),
+            (reason: string) => alert(reason)
+        )
     }
 
     /**
      *  This will use the form input to create a new match
      *  First it will get the current account that is logged in and from there it will create a new smart contract    
      *  Details of the contract will also be saved to database
+     *  @param title: The name of the match. Will be saved to db
+     *  @param wei: The amount of ether in 'wei' format
      */
     private async createMatch(title: string, wei: BN): Promise<void> {
         // Get the user accounts that are available in MetaMask
@@ -52,7 +54,7 @@ class MatchCreateArea extends Component<IProps, any> {
 
         // Deploy a new instance of the contract and send a transaction to it containing the bet value
         // The new instance will be stored in contractInstance
-        let tx: TransactionObject<Contract> = contract.deploy({data: abi.bytecode, arguments: []});
+        let tx: any = contract.deploy({data: abi.bytecode, arguments: []});
         let contractInstance: Contract = await tx.send({
             from: accounts[0], // Account of the sender
             value: wei.toString() // The bet value in wei
