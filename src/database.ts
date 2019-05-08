@@ -19,7 +19,7 @@ export async function createMatchEntry(match: IMatch): Promise<void> {
     });
 
     if (!response.ok) {
-        throw `Failed to retrieve match data! (${response.status});`
+        throw Error(`Failed to retrieve match data! (${response.status});`);
     }
 }
 
@@ -27,7 +27,7 @@ export async function getMatches(): Promise<IMatch[]> {
     let response: Response = await fetch(API_URL + "/api/matches/");
 
     if (!response.ok) {
-        throw `Failed to retrieve match data! (${response.status});`
+        throw Error(`Failed to retrieve match data! (${response.status});`);
     }
 
     return await response.json();

@@ -3,7 +3,7 @@ import '../css/App.css';
 import SiteNavbar from "./SiteNavbar";
 import Web3 from "web3";
 import Routing from "./Routing";
-import {BrowserRouter, Router} from "react-router-dom";
+import {BrowserRouter} from "react-router-dom";
 
 enum LoadingState {
     detectProvider,
@@ -77,6 +77,8 @@ class App extends Component<any,IState> {
                         <Routing web3={this.state.web3 as Web3}/>
                     </BrowserRouter>
                 );
+            default:
+                return <strong>An undefined error occured! State: {this.state.loadingState}</strong>
         }
     }
 }

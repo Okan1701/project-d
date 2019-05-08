@@ -8,7 +8,6 @@ import * as web3utils from 'web3-utils';
 import * as database from "../database";
 import BN from "bn.js";
 import Contract from "web3/eth/contract";
-import {TransactionObject} from "web3/eth/types";
 
 const abi: any = require("../contracts/RouletteContract");
 
@@ -22,6 +21,7 @@ class MatchCreateArea extends Component<IProps, any> {
     /**
      *   This method is run when user clicks on 'Create' button
      *   This will handle form input and create a new match
+     *   @param event: The html form event
      */
     private onSubmit(event: FormEvent<HTMLFormElement>): void {
         const form: EventTarget = event.target;

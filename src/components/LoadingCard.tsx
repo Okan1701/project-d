@@ -8,9 +8,6 @@ interface IProps {
 }
 
 class LoadingCard extends Component<IProps, any> {
-    constructor(props: IProps) {
-        super(props)
-    }
 
     public render(): React.ReactNode {
         if (this.props.show) {

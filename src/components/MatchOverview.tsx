@@ -10,7 +10,6 @@ import Spinner from "react-bootstrap/Spinner";
 import Contract from "web3/eth/contract";
 import Web3 from "web3"
 import ErrorCard from "./ErrorCard";
-import BN from "bn.js";
 
 const rouletteContractAbi = require("../contracts/RouletteContract");
 
@@ -126,7 +125,7 @@ class MatchOverview extends Component<IProps, IState> {
         this.state.contract.methods.addPlayer().send({
             from: this.state.account,
             value: wei.toString()
-        }).then((result) => {
+        }).then(() => {
             this.componentDidMount();
         }, (reason: string) => {
             this.setState({

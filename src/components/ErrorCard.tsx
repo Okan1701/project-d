@@ -8,9 +8,6 @@ interface IProps {
 }
 
 class ErrorCard extends Component<IProps, any> {
-    constructor(props: IProps) {
-        super(props)
-    }
 
     public render(): React.ReactNode {
         if (this.props.show) {
