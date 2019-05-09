@@ -23,6 +23,16 @@
 {
   background-color: darkslateblue;
 }
+
+.btn-primary
+{
+  background-color: darkslateblue;
+  border-color: darkslateblue;
+}
+.btn-primary:hover {
+  background-color: slateblue;
+  border-color: slateblue;
+}
 .App-link {
   color: #61dafb;
 }

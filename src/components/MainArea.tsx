@@ -28,9 +28,9 @@ class MainArea extends Component<IProps, IState> {
     public render(): React.ReactNode {
         return (
             <div>
-                <h1>Main Area</h1>
+                <h1>EasyBet</h1>
                 <hr/>
-                <p>Welcome to the website. This site is used to participate in betting matches with Ether as
+                <p>Welcome to EasyBet. This site is used to participate in betting matches with Ether as
                     currency.
                 </p>
                 <strong>Current wallet address: </strong>{this.state.account}
