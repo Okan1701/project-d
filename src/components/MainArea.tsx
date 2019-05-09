@@ -28,7 +28,7 @@ class MainArea extends Component<IProps, IState> {
     public render(): React.ReactNode {
         return (
             <div>
-                <h1>EasyBet</h1>
+                <h1><img src="https://www.pix123.com/racingbase-au//201812/Dec11/20181211121538_205.PNG" width="800" height="300" alt= "Logo brand"/></h1>
                 <hr/>
                 <p>Welcome to EasyBet. This site is used to participate in betting matches with Ether as
                     currency.
