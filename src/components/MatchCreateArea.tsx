@@ -8,15 +8,25 @@ import * as web3utils from 'web3-utils';
 import * as database from "../database";
 import BN from "bn.js";
 import Contract from "web3/eth/contract";
+import Spinner from "react-bootstrap/Spinner";
 
 const abi: any = require("../contracts/RouletteContract");
+
+interface IState {
+    isCreating: boolean
+}
 
 interface IProps {
     web3: Web3
 }
 
-class MatchCreateArea extends Component<IProps, any> {
-
+class MatchCreateArea extends Component<IProps, IState> {
+    constructor(props: IProps) {
+        super(props);
+        this.state = {
+            isCreating: false
+        }
+    }
 
     /**
      *   This method is run when user clicks on 'Create' button
@@ -28,14 +38,20 @@ class MatchCreateArea extends Component<IProps, any> {
         event.preventDefault();
         event.stopPropagation();
 
+        // Make sure the button is disabled and showing loading icon
+        this.setState({isCreating: true});
+
 
         // Get the ether that the user inputted and convert to wei
         const wei: BN = web3utils.toWei(form[1].value);
         const title: string = form[0].value;
 
         this.createMatch(title, wei).then(
-            () => alert("Match has been created!"),
-            (reason: string) => alert(reason)
+            () => console.log("Match has been created!"),
+            (reason: string) => {
+                alert(reason);
+                this.setState({isCreating: false});
+            }
         )
     }
 
@@ -68,7 +84,24 @@ class MatchCreateArea extends Component<IProps, any> {
             end_date: "2019-05-05"
         };
         await database.createMatchEntry(match);
+        this.setState({isCreating: false});
+        alert("Match has been created!");
 
+    }
+
+    private createLoadingSpinner() {
+        if (this.state.isCreating) {
+            return (
+                <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                />
+            );
+        }
+        return null;
     }
 
     public render(): React.ReactNode {
@@ -96,7 +129,7 @@ class MatchCreateArea extends Component<IProps, any> {
                         </Form.Group>
                         <p>Once you have created the match, other users will be able to see it and even participate
                             in it with their own ether!</p>
-                        <Button type="submit">Create</Button>
+                        <Button type="submit" disabled={this.state.isCreating}>{this.createLoadingSpinner()} Create</Button>
                     </Form>
                 </Card.Body>
             </Card>

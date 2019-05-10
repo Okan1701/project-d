@@ -13,11 +13,11 @@ Open terminal in the root folder of the project (where your package.json file is
 <br><br>
 This will install all the required npm packages for React
 <br><br>
-Once that is done, navigate to the /backend folder and execute the `install-venv.bat` file.<br>
+Once that is done, navigate to the /backend folder and execute the `install.bat` file.<br>
 This will install the virtual python environment that django will use.
 <br><br>
 **FOR LINUX/MAC USERS**<br>
-The same as above, except you need to run `install-venv` file (the one without `.bat` at the end).
+The same as above, except you need to run `install` file (the one without `.bat` at the end).
 <br>
 <br>
 If everything ran without any errors. Then your project is ready to go!
