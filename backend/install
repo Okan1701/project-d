@@ -5,6 +5,9 @@ echo "Initializing virtualenv..."
 virtualenv venv
 echo "Installing python modules to venv..."
 venv/bin/pip install -r requirements.txt
+venv/bin/python manage.py makemigrations api
 venv/bin/python manage.py migrate
+echo "Please enter credentials of new admin account"
+venv/bin/python manage.py createsuperuser
 echo "Installation complete. You may start the project now."
 read -n 1 -s -r -p "Press any key to continue"
