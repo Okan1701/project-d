@@ -63,6 +63,7 @@ class MatchCreateArea extends Component<IProps, IState> {
      *  @param wei: The amount of ether in 'wei' format
      */
     private async createMatch(title: string, wei: BN): Promise<void> {
+
         // Get the user accounts that are available in MetaMask
         const accounts: string[] = await this.props.web3.eth.getAccounts();
         // Create the contract object that we will use to deploy and interact with the contract

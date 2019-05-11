@@ -36,6 +36,7 @@ class App extends Component<any,IState> {
             return;
         } else {
             web3Provider = new Web3(window.web3.currentProvider);
+            web3Provider.eth.transactionConfirmationBlocks = 1;
             this.setState({
                 loadingState: LoadingState.awaitAuth,
                 web3: web3Provider
@@ -55,7 +56,6 @@ class App extends Component<any,IState> {
         }).catch((reason: string) => {
             console.log(reason);
         });
-
 
     }
     

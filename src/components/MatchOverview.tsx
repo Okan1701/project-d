@@ -102,7 +102,7 @@ class MatchOverview extends Component<IProps, IState> {
      * This will submit the entered bet amount
      * @param event: Form submit event containing the form and input
      */
-    private onBetSubmit(event: FormEvent<HTMLFormElement>): void {
+    private async onBetSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
         const form: EventTarget = event.target;
 
         // Prevent default behavior
@@ -122,18 +122,27 @@ class MatchOverview extends Component<IProps, IState> {
         const wei: string = web3utils.toWei(betValue);
 
         // Get the addPlayer method and send a transaction to it
-        this.state.contract.methods.addPlayer().send({
+        let method = this.state.contract.methods.addPlayer();
+        await method.send({
             from: this.state.account,
             value: wei.toString()
-        }).then(() => {
-            this.componentDidMount();
-        }, (reason: string) => {
-            this.setState({
-                sendBetResultMsg: "ERROR: " + reason,
-                disableFormSubmit: true,
-                isSendingBet: false
-            })
-        })
+        });
+        alert("Bet has been placed!");
+        this.componentDidMount()
+    }
+
+    /**
+     * This method is called when the onSubmitBet method throws an error
+     * It will log the error to console and update the state in order to display UI feedback
+     * @param error: the error object containing details about the error
+     */
+    private async onBetSubmitFail(error: Error): Promise<void> {
+        console.log(error);
+        this.setState({
+            sendBetResultMsg: `${error.name}: ${error.message}`,
+            disableFormSubmit: true,
+            isSendingBet: false
+        });
     }
 
 
@@ -145,8 +154,8 @@ class MatchOverview extends Component<IProps, IState> {
         if (this.state.contract === undefined) return;
         let method = this.state.contract.methods.win();
         method.send({from: this.state.account}).then(
-            (res) => {
-                console.log(res);
+            () => {
+                alert("You won!");
             }
         )
     }
@@ -169,7 +178,7 @@ class MatchOverview extends Component<IProps, IState> {
             }
 
             return (
-                <Form onSubmit={(e: FormEvent<HTMLFormElement>) => this.onBetSubmit(e)}>
+                <Form onSubmit={(e: FormEvent<HTMLFormElement>) => this.onBetSubmit(e).catch((ex: Error) => this.onBetSubmitFail(ex))}>
                     <Form.Group>
                         <Form.Label>You can participate in this match by betting your own ether:</Form.Label>
                         <InputGroup>
@@ -181,6 +190,7 @@ class MatchOverview extends Component<IProps, IState> {
                         <br/>
                         <Button type="submit" disabled={this.state.disableFormSubmit}>{loadingElement}Submit
                             bet!</Button>
+                        <p>{this.state.sendBetResultMsg}</p>
                     </Form.Group>
                 </Form>
             );
