@@ -157,14 +157,12 @@ class MatchOverview extends Component<IProps, IState> {
      * Make the currently logged in user win the match
      * This will call 'win()' on the smart contract
      */
-    private makeMeWinner(): void {
+    private async makeMeWinner(): Promise<void> {
         if (this.state.contract === undefined) return;
         let method = this.state.contract.methods.win();
-        method.send({from: this.state.account}).then(
-            () => {
-                alert("You won!");
-            }
-        )
+        await method.send({from: this.state.account});
+        await database.deleteMatch(this.props.match.id as number);
+
     }
 
     /**
