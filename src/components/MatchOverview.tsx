@@ -127,8 +127,15 @@ class MatchOverview extends Component<IProps, IState> {
             from: this.state.account,
             value: wei.toString()
         });
+
+        // Reset form and reload match details
+        this.setState({
+            isSendingBet: false,
+            disableFormSubmit: false
+        });
+        this.componentDidMount();
+
         alert("Bet has been placed!");
-        this.componentDidMount()
     }
 
     /**
