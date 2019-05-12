@@ -3,7 +3,7 @@ import '../css/App.css';
 import SiteNavbar from "./SiteNavbar";
 import Web3 from "web3";
 import Routing from "./Routing";
-import {BrowserRouter, Router} from "react-router-dom";
+import {BrowserRouter} from "react-router-dom";
 
 enum LoadingState {
     detectProvider,
@@ -36,6 +36,7 @@ class App extends Component<any,IState> {
             return;
         } else {
             web3Provider = new Web3(window.web3.currentProvider);
+            web3Provider.eth.transactionConfirmationBlocks = 1;
             this.setState({
                 loadingState: LoadingState.awaitAuth,
                 web3: web3Provider
@@ -55,7 +56,6 @@ class App extends Component<any,IState> {
         }).catch((reason: string) => {
             console.log(reason);
         });
-
 
     }
     
@@ -77,6 +77,8 @@ class App extends Component<any,IState> {
                         <Routing web3={this.state.web3 as Web3}/>
                     </BrowserRouter>
                 );
+            default:
+                return <strong>An undefined error occured! State: {this.state.loadingState}</strong>
         }
     }
 }

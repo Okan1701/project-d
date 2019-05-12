@@ -7,7 +7,7 @@ class SiteNavbar extends Component {
     public render(): any {
         return (
             <Navbar variant="dark" expand="lg">
-                <Navbar.Brand as={Link} to="/"><img src="https://yt3.ggpht.com/a/AGF-l7-BuJETOnFhNI2w3WJF163XAa1e13BtRP6znQ=s900-mo-c-c0xffffffff-rj-k-no" width="30" height="30" alt= "Logo brand"/>EasyBet</Navbar.Brand>
+                <Navbar.Brand as={Link} to="/"><img src="https://yt3.ggpht.com/a/AGF-l7-BuJETOnFhNI2w3WJF163XAa1e13BtRP6znQ=s900-mo-c-c0xffffffff-rj-k-no" width="30" height="30" alt= "Logo brand"/>  EasyBet</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">

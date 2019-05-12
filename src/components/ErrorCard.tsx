@@ -1,13 +1,13 @@
 import React, {Component} from "react";
 import Card from "react-bootstrap/Card";
-import Spinner from "react-bootstrap/Spinner";
 
 interface IProps {
-    text: string,
+    title: string,
+    msg: string
     show: boolean
 }
 
-class LoadingCard extends Component<IProps, any> {
+class ErrorCard extends Component<IProps, any> {
 
     public render(): React.ReactNode {
         if (this.props.show) {
@@ -15,9 +15,9 @@ class LoadingCard extends Component<IProps, any> {
                 <Card className="text-center">
                     <Card.Body>
                         <div className="align-content-center">
-                            <Spinner animation="border" variant="primary" text/>
+                            <Card.Title><strong>{this.props.title}</strong></Card.Title>
                             <br/><br/>
-                            <Card.Title><strong>{this.props.text}</strong></Card.Title>
+                            <strong>{this.props.msg}</strong>
                         </div>
                     </Card.Body>
                 </Card>
@@ -28,4 +28,4 @@ class LoadingCard extends Component<IProps, any> {
     }
 }
 
-export default LoadingCard;
+export default ErrorCard;

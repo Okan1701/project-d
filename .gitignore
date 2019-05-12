@@ -24,5 +24,6 @@ yarn-error.log*
 
 /backend/venv
 /backend/.idea
+/backend/db.sqlite3
 .idea
 .vscode
