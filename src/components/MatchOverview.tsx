@@ -161,7 +161,7 @@ class MatchOverview extends Component<IProps, IState> {
         if (this.state.contract === undefined) return;
         let method = this.state.contract.methods.win();
         await method.send({from: this.state.account});
-        await database.deleteMatch(this.props.match.id as number);
+        await database.setMatchAsArchived(this.props.match.id as number);
 
     }
 

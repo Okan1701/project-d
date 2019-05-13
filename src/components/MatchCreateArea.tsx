@@ -9,7 +9,6 @@ import * as database from "../database";
 import BN from "bn.js";
 import Contract from "web3/eth/contract";
 import Spinner from "react-bootstrap/Spinner";
-import Modal from "react-bootstrap/Modal";
 import PopUpComponent from "./PopUpComponent";
 
 
@@ -31,7 +30,7 @@ class MatchCreateArea extends Component<IProps, IState> {
 
             onCreate: false,
             isCreating: false
-        }
+        };
         this.closePopup = this.closePopup.bind(this)
     }
 
@@ -89,7 +88,8 @@ class MatchCreateArea extends Component<IProps, IState> {
             title: title,
             contract_address: contractInstance.options.address,
             start_date: "2019-05-05",
-            end_date: "2019-05-05"
+            end_date: "2019-05-05",
+            active: true
         };
         await database.createMatchEntry(match);
         this.setState({onCreate: true, isCreating:false});
@@ -111,16 +111,18 @@ class MatchCreateArea extends Component<IProps, IState> {
         return null;
     }
 
-
-
-    public closePopup()
-    {
-      this.setState({onCreate:false})
+    /**
+     * Hides the confirmation popup that is shown when match is created
+     * This is done by setting onCreate of the state to false
+     */
+    public closePopup(): void{
+        this.setState({onCreate:false})
     }
+
     public render(): React.ReactNode {
         return <div>
 
-            <PopUpComponent Title="Hello" Message="This is a message" onClose={this.closePopup} show = {this.state.onCreate}/>
+            <PopUpComponent title="Confirmation" message="Your match has been created!" onClose={this.closePopup} show={this.state.onCreate}/>
             <h1>Match creation</h1>
             <hr/>
             <p>On this page, you can create a new betting match that other players can participate in!
