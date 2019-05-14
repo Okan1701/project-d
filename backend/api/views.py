@@ -11,6 +11,7 @@ class MatchesView(generics.ListAPIView):
     queryset = Match.objects.all()
     serializer_class = MatchSerializer
 
+
 class ActiveMatchesView(generics.ListAPIView):
     queryset = Match.objects.all()
     serializer_class = MatchSerializer
@@ -18,12 +19,14 @@ class ActiveMatchesView(generics.ListAPIView):
     def get_queryset(self):
         return Match.objects.filter(active=True).values()
 
+
 class InactiveMatchesView(generics.ListAPIView):
     queryset = Match.objects.all()
     serializer_class = MatchSerializer
 
     def get_queryset(self):
         return Match.objects.filter(active=False).values()
+
 
 class MatchCreateView(generics.CreateAPIView):
     queryset = Match.objects.all()
@@ -48,3 +51,4 @@ class PlayerCreateView(generics.CreateAPIView):
 class PlayerDetailView(generics.RetrieveAPIView, generics.UpdateAPIView, generics.DestroyAPIView):
     queryset = Player.objects.all()
     serializer_class = PlayerSerializer
+

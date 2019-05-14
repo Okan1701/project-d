@@ -16,5 +16,5 @@ urlpatterns = [
     # Players
     path("players/", views.PlayersView.as_view()),
     path("players/create", views.PlayerCreateView.as_view()),
-    path("players/<int:pk>", views.PlayerDetailView.as_view()),
+    path("players/<str:pk>", views.PlayerDetailView.as_view()),
 ]

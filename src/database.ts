@@ -10,6 +10,15 @@ export interface IMatch {
     active: boolean
 }
 
+// Defines a player object
+export interface IPlayer {
+    address: string,
+    name: string
+    wins: number,
+    losses: number
+    earnings: number
+}
+
 
 /**
  * Create a new match row in the backend database
@@ -76,4 +85,53 @@ export async function setMatchAsArchived(id: number): Promise<void> {
         throw Error(`Failed to archive match ID ${id}! (${putResponse.status})`)
     }
 
+}
+
+/**
+ * Checks if the user is already registered
+ * It is done by attempting to get user info from backend using the address which is the primary key
+ * If response is not HTTP 200 then it means the backend could not find any user that matches the address
+ * @param address: the ethereum public address that belongs to a account
+ * @return boolean: true if account exists, false if not
+ */
+export async function checkIfUserIsRegistered(address: string): Promise<boolean> {
+    let response = await fetch(API_URL + "/players/" + address);
+    return response.ok;
+}
+
+/**
+ * Creates a new player object using the specified address as primary key
+ * @param player: object containing the player info. See IPlayer interface!
+ */
+export async function registerPlayer(player: IPlayer): Promise<void> {
+    let response = await fetch(
+        API_URL + "/players/create",
+        {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(player)
+        }
+    );
+
+    if (!response.ok) {
+        throw Error(`Failed to create new player! (${response.status})`)
+    }
+}
+
+/**
+ * Fetch a specific player using it's wallet address
+ * @param address: the wallet address of the player
+ */
+export async function getPlayer(address: string): Promise<IPlayer> {
+    let response: Response = await fetch(API_URL + "/players/" + address);
+
+    if (!response.ok) {
+        throw Error(`Failed to fetch player with address ${address}! (${response.status})`)
+    }
+
+    let player: IPlayer = await response.json();
+    return player;
 }

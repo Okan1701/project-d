@@ -17,8 +17,9 @@ class Match(models.Model):
         verbose_name = 'Match'
         verbose_name_plural = 'Matches'
 
+
 class Player(models.Model):
-    address = models.CharField(max_length=256)
+    address = models.CharField(max_length=256, primary_key=True)
     name = models.CharField(max_length=40)
     wins = models.IntegerField()
     losses = models.IntegerField()

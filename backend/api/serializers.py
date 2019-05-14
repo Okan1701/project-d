@@ -12,4 +12,4 @@ class MatchSerializer(ModelSerializer):
 class PlayerSerializer(ModelSerializer):
     class Meta:
         model = Player
-        fields = ("id", "address", "name", "wins", "losses", "earnings")
+        fields = ("address", "name", "wins", "losses", "earnings")
