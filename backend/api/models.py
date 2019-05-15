@@ -23,7 +23,7 @@ class Player(models.Model):
     name = models.CharField(max_length=40)
     wins = models.IntegerField()
     losses = models.IntegerField()
-    earnings = models.IntegerField()
+    earnings = models.DecimalField(max_digits=128, decimal_places=0)
 
     def __str__(self):
         return self.name

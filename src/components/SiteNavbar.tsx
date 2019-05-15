@@ -25,7 +25,11 @@ class SiteNavbar extends Component<IProps, any> {
 
     private renderPlayerLink() {
         if (this.props.showContent && this.props.player !== undefined) {
-            return <Navbar.Text>{this.props.player.name}</Navbar.Text>;
+            return (
+                <Nav>
+                    <Nav.Link as={Link} to="/profile">{this.props.player.name}</Nav.Link>
+                </Nav>
+            );
         }
     }
 

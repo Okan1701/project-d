@@ -163,6 +163,29 @@ class MatchOverview extends Component<IProps, IState> {
         await method.send({from: this.state.account});
         await database.setMatchAsArchived(this.props.match.id as number);
 
+        // Update the stats for each player
+        // We need to check the address and make sure we do not accidently make the winner lose his earnings stats
+        for (let index in this.state.players) {
+            if (this.state.players[index] === this.state.account) {
+                let contractMethod = this.state.contract.methods.getTotalBetValue();
+                let wonBetValueWei: number = await contractMethod.call({from: this.state.players[index]});
+
+                console.log(wonBetValueWei);
+
+                await database.updatePlayerWinLoss(this.state.players[index], true);
+                await database.updatePlayerEarnings(this.state.players[index], wonBetValueWei);
+
+            } else {
+                let contractMethod = this.state.contract.methods.getPlayerBet(this.state.players[index]);
+                // We will need to invert lostBetValue to a negative value since player is meant to lose earnings
+                let lostBetValueWei: number = await contractMethod.call({from: this.state.players[index]});
+
+                console.log(lostBetValueWei);
+
+                await database.updatePlayerWinLoss(this.state.players[index], false);
+                //await database.updatePlayerEarnings(this.state.players[index], lostBetValueWei * -1);
+            }
+        }
     }
 
     /**
@@ -183,7 +206,8 @@ class MatchOverview extends Component<IProps, IState> {
             }
 
             return (
-                <Form onSubmit={(e: FormEvent<HTMLFormElement>) => this.onBetSubmit(e).catch((ex: Error) => this.onBetSubmitFail(ex))}>
+                <Form
+                    onSubmit={(e: FormEvent<HTMLFormElement>) => this.onBetSubmit(e).catch((ex: Error) => this.onBetSubmitFail(ex))}>
                     <Form.Group>
                         <Form.Label>You can participate in this match by betting your own ether:</Form.Label>
                         <InputGroup>

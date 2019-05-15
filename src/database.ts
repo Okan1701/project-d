@@ -132,6 +132,58 @@ export async function getPlayer(address: string): Promise<IPlayer> {
         throw Error(`Failed to fetch player with address ${address}! (${response.status})`)
     }
 
-    let player: IPlayer = await response.json();
-    return player;
+    return await response.json();
+}
+
+/**
+ * Update a player on the backend. It will overwrite the old player data with the new one
+ * @param player: object of IPlayer type that represents the player
+ */
+export async function updatePlayer(player: IPlayer): Promise<void> {
+    let response: Response = await fetch(API_URL + "/players/" + player.address,
+        {
+            method: "PUT",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(player)
+        }
+    );
+
+    if (!response.ok) {
+        console.log(response);
+        console.log(player);
+        throw Error(`Failed to update player with address ${player.address}! (${response.status})`)
+    }
+}
+
+/**
+ * Update the win/loss stats of the player.
+ * It will first fetch the entire player, update it and then send it back to db.
+ * @param address: the string wallet address of the player
+ * @param hasWon: boolean representing if it should increment the wins stat or the losses stat
+ */
+export async function updatePlayerWinLoss(address: string, hasWon: boolean): Promise<void> {
+    let player: IPlayer = await getPlayer(address);
+
+    if (hasWon) player.wins++;
+    else player.losses++;
+
+    await updatePlayer(player);
+}
+
+/**
+ * Update the players total earnings. It is similar to updatePlayerWinLoss()
+ * WARNING: the ether must be in wei format first or else you'll screw everything up
+ * If player is meant to lose ether, then pass the earningsFromMatch param as a negative value
+ * @param address: the string wallet address of the player
+ * @param earningsFromMatch: the amount of ether that the player has won in wei format
+ */
+export async function updatePlayerEarnings(address: string, earningsFromMatch: number): Promise<void> {
+    console.log("earningsFromMatch: " + earningsFromMatch.toString());
+    let player: IPlayer = await getPlayer(address);
+    player.earnings += earningsFromMatch;
+
+    await updatePlayer(player);
 }

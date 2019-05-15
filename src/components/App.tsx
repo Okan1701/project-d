@@ -85,8 +85,11 @@ class App extends Component<any, IState> {
             return;
         }
 
-
-        this.setState({loadingState: LoadingState.loaded});
+        const player: database.IPlayer = await database.getPlayer(accounts[0]);
+        this.setState({
+            loadingState: LoadingState.loaded,
+            player: player
+        });
     }
 
     private onRegistered(): void {
@@ -120,7 +123,7 @@ class App extends Component<any, IState> {
                     <BrowserRouter>
                         <SiteNavbar showContent={true} player={this.state.player}/>
                         <br/>
-                        <Routing web3={this.state.web3 as Web3}/>
+                        <Routing web3={this.state.web3 as Web3} player={this.state.player as database.IPlayer}/>
                     </BrowserRouter>
                 );
             default:
