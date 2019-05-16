@@ -49,7 +49,7 @@ class MatchOverview extends Component<IProps, IState> {
             isSendingBet: false,
             disableFormSubmit: false,
             sendBetResultMsg: ""
-        }
+        };
     }
 
     public componentDidMount(): void {
@@ -170,8 +170,6 @@ class MatchOverview extends Component<IProps, IState> {
                 let contractMethod = this.state.contract.methods.getTotalBetValue();
                 let wonBetValueWei: number = await contractMethod.call({from: this.state.players[index]});
 
-                console.log(wonBetValueWei);
-
                 await database.updatePlayerWinLoss(this.state.players[index], true);
                 await database.updatePlayerEarnings(this.state.players[index], wonBetValueWei);
 
@@ -180,10 +178,9 @@ class MatchOverview extends Component<IProps, IState> {
                 // We will need to invert lostBetValue to a negative value since player is meant to lose earnings
                 let lostBetValueWei: number = await contractMethod.call({from: this.state.players[index]});
 
-                console.log(lostBetValueWei);
-
                 await database.updatePlayerWinLoss(this.state.players[index], false);
-                //await database.updatePlayerEarnings(this.state.players[index], lostBetValueWei * -1);
+                await database.updatePlayerEarnings(this.state.players[index], lostBetValueWei * -1);
+
             }
         }
     }

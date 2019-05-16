@@ -132,7 +132,9 @@ export async function getPlayer(address: string): Promise<IPlayer> {
         throw Error(`Failed to fetch player with address ${address}! (${response.status})`)
     }
 
-    return await response.json();
+    let player: IPlayer = await response.json();
+    player.earnings = parseInt(player.earnings.toString());
+    return player;
 }
 
 /**
@@ -150,6 +152,8 @@ export async function updatePlayer(player: IPlayer): Promise<void> {
             body: JSON.stringify(player)
         }
     );
+
+    console.log("JSON:" + JSON.stringify(player));
 
     if (!response.ok) {
         console.log(response);
@@ -181,7 +185,6 @@ export async function updatePlayerWinLoss(address: string, hasWon: boolean): Pro
  * @param earningsFromMatch: the amount of ether that the player has won in wei format
  */
 export async function updatePlayerEarnings(address: string, earningsFromMatch: number): Promise<void> {
-    console.log("earningsFromMatch: " + earningsFromMatch.toString());
     let player: IPlayer = await getPlayer(address);
     player.earnings += earningsFromMatch;
 
