@@ -6,6 +6,7 @@ import MatchesArea from "./MatchesArea";
 import Web3 from "web3";
 import ProfileAreaComponent from "./ProfileAreaComponent";
 import {IPlayer} from "../database";
+import LeaderboardArea from "./LeaderboardArea";
 
 interface IProps {
     web3: Web3,
@@ -21,6 +22,7 @@ class Routing extends Component<IProps, any> {
                     <Route path="/matches" render={() => <MatchesArea web3={this.props.web3} />}/>
                     <Route path="/create" render={() => <MatchCreateArea web3={this.props.web3} />}/>
                     <Route path="/profile" render={() => <ProfileAreaComponent web3={this.props.web3}/>}/>
+                    <Route path="/leaderboard" render={() => <LeaderboardArea/>}/>
                 </Switch>
             </div>
         );

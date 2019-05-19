@@ -12,6 +12,7 @@ export interface IMatch {
 
 // Defines a player object
 export interface IPlayer {
+    [key: number]: any
     address: string,
     name: string
     wins: number,
@@ -189,4 +190,27 @@ export async function updatePlayerEarnings(address: string, earningsFromMatch: n
     player.earnings += earningsFromMatch;
 
     await updatePlayer(player);
+}
+
+/**
+ * Fetches all the players from the backend
+ * The result will be an IPlayer[] array that contains all the player objects
+ * NOTE: The backend sends the earnings property as string instead of number,
+ * this is not good so we will manualily convert it to number foreach player obj
+ */
+export async function getAllPlayers(): Promise<IPlayer[]> {
+    let response: Response = await fetch(API_URL + "/players/");
+
+    if (!response.ok) {
+        throw Error(`Failed to fetch all players! (${response.status})`)
+    }
+
+    // Since backend sends the earnings as string for some reason,
+    // we will need to convert it to number for all player objects
+    let players: IPlayer[] = await response.json();
+    for await (let player of players) {
+       player.earnings = parseInt(player.earnings.toString());
+    }
+
+    return players;
 }
