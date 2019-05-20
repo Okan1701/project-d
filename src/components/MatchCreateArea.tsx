@@ -10,6 +10,7 @@ import BN from "bn.js";
 import Contract from "web3/eth/contract";
 import Spinner from "react-bootstrap/Spinner";
 import PopUpComponent from "./PopUpComponent";
+import {getEventsAtDate} from "../sports";
 
 
 const abi: any = require("../contracts/RouletteContract");
@@ -31,7 +32,8 @@ class MatchCreateArea extends Component<IProps, IState> {
             onCreate: false,
             isCreating: false
         };
-        this.closePopup = this.closePopup.bind(this)
+        this.closePopup = this.closePopup.bind(this);
+        getEventsAtDate("2019-05-21");
     }
 
     /**
@@ -134,6 +136,12 @@ class MatchCreateArea extends Component<IProps, IState> {
                         <Form.Group>
                             <Form.Label>Match Title:</Form.Label>
                             <Form.Control type="text" placeholder="Enter match title here..." required/>
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Label>Select sport event that the bet will be based on:</Form.Label>
+                            <Form.Control type="select">
+                                <option>1</option>
+                            </Form.Control>
                         </Form.Group>
                         <Form.Group>
                             <Form.Label>Your bet</Form.Label>
