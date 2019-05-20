@@ -31,4 +31,8 @@ contract RouletteContract {
     function getTotalBetValue() public view returns (uint256 betValue) {
         return totalBetValue;
     }
+
+    function getPlayerBet(address playerAddress) public view returns (uint256 betValue) {
+        return playerBet[playerAddress];
+    }
 }

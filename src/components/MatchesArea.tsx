@@ -31,7 +31,7 @@ class MatchesArea extends Component<IProps, IState> {
     
     public componentDidMount(): void {
         // Get the matches from database
-        database.getMatches().then(
+        database.getActiveMatches().then(
             (matches: database.IMatch[]) => {
                 this.setState({
                     matches: matches,

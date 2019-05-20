@@ -9,10 +9,13 @@ import * as database from "../database";
 import BN from "bn.js";
 import Contract from "web3/eth/contract";
 import Spinner from "react-bootstrap/Spinner";
+import PopUpComponent from "./PopUpComponent";
+
 
 const abi: any = require("../contracts/RouletteContract");
 
 interface IState {
+    onCreate : boolean
     isCreating: boolean
 }
 
@@ -24,8 +27,11 @@ class MatchCreateArea extends Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
+
+            onCreate: false,
             isCreating: false
-        }
+        };
+        this.closePopup = this.closePopup.bind(this)
     }
 
     /**
@@ -82,11 +88,11 @@ class MatchCreateArea extends Component<IProps, IState> {
             title: title,
             contract_address: contractInstance.options.address,
             start_date: "2019-05-05",
-            end_date: "2019-05-05"
+            end_date: "2019-05-05",
+            active: true
         };
         await database.createMatchEntry(match);
-        this.setState({isCreating: false});
-        alert("Match has been created!");
+        this.setState({onCreate: true, isCreating:false});
 
     }
 
@@ -105,8 +111,18 @@ class MatchCreateArea extends Component<IProps, IState> {
         return null;
     }
 
+    /**
+     * Hides the confirmation popup that is shown when match is created
+     * This is done by setting onCreate of the state to false
+     */
+    public closePopup(): void{
+        this.setState({onCreate:false})
+    }
+
     public render(): React.ReactNode {
         return <div>
+
+            <PopUpComponent title="Confirmation" message="Your match has been created!" onClose={this.closePopup} show={this.state.onCreate}/>
             <h1>Match creation</h1>
             <hr/>
             <p>On this page, you can create a new betting match that other players can participate in!
@@ -125,7 +141,7 @@ class MatchCreateArea extends Component<IProps, IState> {
                                 <InputGroup.Prepend>
                                     <InputGroup.Text id="inputGroupPrepend">ETH</InputGroup.Text>
                                 </InputGroup.Prepend>
-                                <Form.Control type="number" placeholder="Enter bet value here..." required/>
+                                <Form.Control type="double" placeholder="Enter bet value here..." pattern="(^-?[0-9.]+)" required />
                             </InputGroup>
                         </Form.Group>
                         <p>Once you have created the match, other users will be able to see it and even participate

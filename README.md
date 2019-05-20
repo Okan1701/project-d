@@ -49,6 +49,11 @@ The API has the following endpoints:<br>
 * `/api/matches` - Returns all matches in the database
 * `/api/matches/create` - Allows you to create a match by doing a POST request
 * `/api/matches/<match_id>` - Allows you to view, edit, delete a match. Replace <match_id> with the actual id number
+* `/api/matches/active` - Returns all matches that are marked as active (match.active=TRUE)
+* `/api/matches/archive` - Returns all matches that have been archived (match.active=FALSE)
+* `/api/players` - Returns all registered players
+* `/api/players/create` - Allows you to create a player by doing a POST request
+* `/api/players/<player_address>` - Allows you to view, edit, delete a player. Replace <player_address> with the wallet address of that player
 <br>
 
 **Creating a match**<br>
