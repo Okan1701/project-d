@@ -1,11 +1,12 @@
 import React, {Component} from "react";
 import Card from "react-bootstrap/Card";
-import * as database from "../database";
+import * as database from "../data/database";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import MatchOverview from "./MatchOverview";
 import Web3 from "web3"
+import {IMatch} from "../data/interfaces";
 
 // Define properties of the component Props
 interface IProps {
@@ -14,8 +15,8 @@ interface IProps {
 
 // Define the properties of the component State
 interface IState {
-    matches: database.IMatch[],
-    selectedMatch?: database.IMatch,
+    matches: IMatch[],
+    selectedMatch?: IMatch,
     displayMatchDetails: boolean
 }
 
@@ -32,7 +33,7 @@ class MatchesArea extends Component<IProps, IState> {
     public componentDidMount(): void {
         // Get the matches from database
         database.getActiveMatches().then(
-            (matches: database.IMatch[]) => {
+            (matches: IMatch[]) => {
                 this.setState({
                     matches: matches,
                 });
@@ -49,7 +50,7 @@ class MatchesArea extends Component<IProps, IState> {
      * Called when user clicks on the View button of a match in the list
      * @param match: the selected match object
      */
-    private onMatchSelected(match: database.IMatch): void {
+    private onMatchSelected(match: IMatch): void {
         this.setState({
             displayMatchDetails: true,
             selectedMatch: match
@@ -61,7 +62,7 @@ class MatchesArea extends Component<IProps, IState> {
      */
     private displayMatchDetails(): React.ReactNode {
         if (this.state.displayMatchDetails) {
-            return <MatchOverview match={(this.state.selectedMatch as database.IMatch)} web3={this.props.web3}/>
+            return <MatchOverview match={(this.state.selectedMatch as IMatch)} web3={this.props.web3}/>
         } else {
             return (
                 <Card>

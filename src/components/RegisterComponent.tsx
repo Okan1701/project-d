@@ -3,7 +3,8 @@ import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
-import * as database from "../database";
+import * as database from "../data/database";
+import {IPlayer} from "../data/interfaces";
 
 interface IState {
     showInfo: boolean
@@ -47,7 +48,7 @@ class RegisterComponent extends Component<IProps, IState> {
         }
 
         // Register the new user
-        const player: database.IPlayer = {
+        const player: IPlayer = {
             address: this.props.accounts[0],
             name: inputName,
             wins: 0,

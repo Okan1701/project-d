@@ -5,8 +5,8 @@ import MatchCreateArea from "./MatchCreateArea";
 import MatchesArea from "./MatchesArea";
 import Web3 from "web3";
 import ProfileAreaComponent from "./ProfileAreaComponent";
-import {IPlayer} from "../database";
 import LeaderboardArea from "./LeaderboardArea";
+import {IPlayer} from "../data/interfaces";
 
 interface IProps {
     web3: Web3,

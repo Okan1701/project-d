@@ -1,6 +1,6 @@
 import React, {Component, FormEvent} from "react";
 import LoadingCard from "./LoadingCard";
-import * as database from "../database";
+import * as database from "../data/database";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import * as web3utils from 'web3-utils';
@@ -10,6 +10,7 @@ import Spinner from "react-bootstrap/Spinner";
 import Contract from "web3/eth/contract";
 import Web3 from "web3"
 import ErrorCard from "./ErrorCard";
+import {IMatch} from "../data/interfaces";
 
 const rouletteContractAbi = require("../contracts/RouletteContract");
 
@@ -33,7 +34,7 @@ interface IState {
 
 interface IProps {
     web3: Web3,
-    match: database.IMatch
+    match: IMatch
 }
 
 class MatchOverview extends Component<IProps, IState> {

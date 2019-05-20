@@ -4,8 +4,9 @@ import SiteNavbar from "./SiteNavbar";
 import Web3 from "web3";
 import Routing from "./Routing";
 import {BrowserRouter} from "react-router-dom";
-import * as database from "../database";
+import * as database from "../data/database";
 import RegisterComponent from "./RegisterComponent";
+import {IPlayer} from "../data/interfaces";
 
 enum LoadingState {
     detectProvider,
@@ -22,7 +23,7 @@ interface IState {
     errorMsg: string
     web3?: Web3,
     accounts: string[],
-    player?: database.IPlayer
+    player?: IPlayer
 }
 
 class App extends Component<any, IState> {
@@ -85,7 +86,7 @@ class App extends Component<any, IState> {
             return;
         }
 
-        const player: database.IPlayer = await database.getPlayer(accounts[0]);
+        const player: IPlayer = await database.getPlayer(accounts[0]);
         this.setState({
             loadingState: LoadingState.loaded,
             player: player
@@ -95,7 +96,7 @@ class App extends Component<any, IState> {
     private onRegistered(): void {
         this.setState({loadingState: LoadingState.loaded});
         database.getPlayer(this.state.accounts[0]).then(
-            (player: database.IPlayer) => this.setState({player: player, loadingState: LoadingState.loaded})
+            (player: IPlayer) => this.setState({player: player, loadingState: LoadingState.loaded})
         );
     }
 
@@ -123,7 +124,7 @@ class App extends Component<any, IState> {
                     <BrowserRouter>
                         <SiteNavbar showContent={true} player={this.state.player}/>
                         <br/>
-                        <Routing web3={this.state.web3 as Web3} player={this.state.player as database.IPlayer}/>
+                        <Routing web3={this.state.web3 as Web3} player={this.state.player as IPlayer}/>
                     </BrowserRouter>
                 );
             default:

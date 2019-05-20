@@ -4,7 +4,8 @@ import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
 import LoadingCard from "./LoadingCard";
-import * as database from "../database";
+import * as database from "../data/database";
+import {IPlayer} from "../data/interfaces";
 
 enum SortMode {
     ByWins = "by wins",
@@ -14,7 +15,7 @@ enum SortMode {
 
 interface IState {
     isLoading: boolean,
-    players: database.IPlayer[],
+    players: IPlayer[],
     sortTitle: string
 }
 
@@ -43,22 +44,22 @@ class LeaderboardArea extends Component<IProps, IState> {
     private async populateTable(sortMode: SortMode): Promise<void> {
         this.setState({isLoading: true});
 
-        let players: database.IPlayer[] = await database.getAllPlayers();
+        let players: IPlayer[] = await database.getAllPlayers();
 
         // See: https://www.w3schools.com/js/js_array_sort.asp for more info about sorting function
         switch (sortMode) {
             case SortMode.ByWins:
-                players.sort(function (p: database.IPlayer, b: database.IPlayer) {
+                players.sort(function (p: IPlayer, b: IPlayer) {
                     return b.wins - p.wins
                 });
                 break;
             case SortMode.ByLosses:
-                players.sort(function (p: database.IPlayer, b: database.IPlayer) {
+                players.sort(function (p: IPlayer, b: IPlayer) {
                     return b.losses - p.losses
                 });
                 break;
             case SortMode.ByEarnings:
-                players.sort(function (p: database.IPlayer, b: database.IPlayer) {
+                players.sort(function (p: IPlayer, b: IPlayer) {
                     return b.earnings - p.earnings
                 });
                 break;
@@ -90,7 +91,7 @@ class LeaderboardArea extends Component<IProps, IState> {
                 </tr>
                 </thead>
                 <tbody>
-                {this.state.players.map((player: database.IPlayer) => (
+                {this.state.players.map((player: IPlayer) => (
                     <tr>
                         <td>{player.name}</td>
                         <td>{player.wins}</td>
