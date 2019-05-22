@@ -17,12 +17,20 @@ export async function getEventsAtDate(date: Date): Promise<ISportEvent[]> {
     return (await response.json()).events;
 }
 
+/**
+ * Just like with getEventsAtDate we get all matches, but this time from a date range instead of specific date
+ * it will include the matches between dateStart and dateEnd
+ * @param dateStart: the start date of the range
+ * @param dateEnd: the end date of the range
+ */
 export async function getEventsFromDateRange(dateStart: Date, dateEnd: Date): Promise<ISportEvent[]> {
+    // We want to compare the date itself, not the time
     dateStart.setHours(0,0,0,0);
     dateEnd.setHours(0,0,0,0);
 
     let events: ISportEvent[] = [];
 
+    // For each date in the range, we will call getEventsAtDate and merge it results with the events array
     while (dateStart <= dateEnd) {
         let res: ISportEvent[] = await getEventsAtDate(dateStart);
         events = events.concat(res);

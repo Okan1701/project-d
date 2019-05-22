@@ -5,18 +5,32 @@ import {ISportEvent} from "../../data/interfaces";
 
 interface IProps {
     sportEvents: ISportEvent[],
-    display: boolean
+    show: boolean,
+    onSelectCallBackFn?: (event: ISportEvent) => void
 }
 
 class MatchCreateSportsList extends Component<IProps, any> {
+
+    /**
+     * This is called by the HTML table in render() when user clicks on a table row
+     * It will use the callback function onSelectCallBackFn to notify parent component that user has selected a match
+     * The callback function is optional. If not defined, then nothing will happen
+     * @param event: the sport event object that represented the row that was clicked
+     */
+    private onTableRowClick(event: ISportEvent): void {
+        if (this.props.onSelectCallBackFn !== undefined) {
+            this.props.onSelectCallBackFn(event);
+        }
+    }
+
     public render() {
-        if (!this.props.display) return null;
+        if (!this.props.show) return null;
 
         return (
             <Card>
                 <Card.Header>Current available sport events</Card.Header>
                 <Card.Body>
-                    <Table>
+                    <Table hover={true}>
                         <thead>
                         <tr>
                             <th>Event name</th>
@@ -27,7 +41,7 @@ class MatchCreateSportsList extends Component<IProps, any> {
                         </thead>
                         <tbody>
                         {this.props.sportEvents.map((event: ISportEvent) => (
-                            <tr>
+                            <tr onClick={() => this.onTableRowClick(event)}>
                                 <td>{event.strEvent}</td>
                                 <td>Baseball</td>
                                 <td>MLB</td>

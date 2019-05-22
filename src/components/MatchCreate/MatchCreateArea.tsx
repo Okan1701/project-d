@@ -1,12 +1,11 @@
 import React, {Component} from "react";
-import Card from "react-bootstrap/Card";
-import Table from "react-bootstrap/Table";
 import Web3 from "web3";
 import * as sports from "../../data/sports";
 import {ISportEvent} from "../../data/interfaces";
 import ErrorCard from "../Misc/ErrorCard";
 import LoadingCard from "../Misc/LoadingCard";
 import MatchCreateSportsList from "./MatchCreateSportsList";
+import MatchCreateForm from "./MatchCreateForm";
 
 
 enum DisplayState {
@@ -18,7 +17,8 @@ enum DisplayState {
 
 interface IState {
     displayState: DisplayState,
-    sportEvents: ISportEvent[]
+    sportEvents: ISportEvent[],
+    selectedSportEvent?: ISportEvent
 }
 
 interface IProps {
@@ -34,11 +34,26 @@ class MatchCreateArea extends Component<IProps, IState> {
         };
     }
 
+    /**
+     * Handles the event when user selects a sport event. The specific event will be saved to state.
+     * We will then show the match creation form to the user so that a match can be created from that specific sport event
+     * This function will be passed as props to the component MatchCreateSportsList as that handles the sports list
+     * @param event: the sport event object that represented the row that was clicked
+     */
+    private onSportEventSelected(event: ISportEvent): void {
+        this.setState({
+            displayState: DisplayState.CreateForm,
+            selectedSportEvent: event
+        });
+    }
+
     public componentDidMount(): void {
         let dateRangeStart = new Date();
         let dateRangeEnd = new Date();
+        // The date range will be 7 days
         dateRangeEnd.setDate(dateRangeStart.getDate() + 7);
 
+        // Get all the sport events from the specified date range
         sports.getEventsFromDateRange(dateRangeStart, dateRangeEnd).then(
             (events: ISportEvent[]) => {
                 this.setState({
@@ -56,6 +71,12 @@ class MatchCreateArea extends Component<IProps, IState> {
     }
 
     public render() {
+        // Only include the MatchCreateForm component if selectedSportEvent is actually defined. Else we get error :(
+        let createForm;
+        if (this.state.selectedSportEvent !== undefined) {
+            createForm = <MatchCreateForm web3={this.props.web3} sportEvent={this.state.selectedSportEvent as ISportEvent} show={true}/>
+        }
+
         return (
             <div>
                 <h1>Match creation</h1>
@@ -65,7 +86,8 @@ class MatchCreateArea extends Component<IProps, IState> {
                 </p>
                 <ErrorCard title="Error!" msg="An error has occured while proccesing your request. Please try again later!" show={this.state.displayState === DisplayState.Error}/>
                 <LoadingCard text={"Loading data, please wait..."} show={this.state.displayState === DisplayState.Loading}/>
-                <MatchCreateSportsList sportEvents={this.state.sportEvents} display={this.state.displayState === DisplayState.SportsList}/>
+                <MatchCreateSportsList sportEvents={this.state.sportEvents} show={this.state.displayState === DisplayState.SportsList} onSelectCallBackFn={(event: ISportEvent) => this.onSportEventSelected(event)}/>
+                {createForm}
             </div>
         );
     }
