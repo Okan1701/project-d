@@ -5,16 +5,16 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import Web3 from "web3";
 import * as web3utils from 'web3-utils';
-import * as database from "../data/database";
+import * as database from "../../data/database";
 import BN from "bn.js";
 import Contract from "web3/eth/contract";
 import Spinner from "react-bootstrap/Spinner";
-import PopUpComponent from "./PopUpComponent";
-import * as sports from "../data/sports";
-import {IMatch, ISportEvent} from "../data/interfaces";
+import PopUpComponent from "../Misc/PopUpComponent";
+import * as sports from "../../data/sports";
+import {IMatch, ISportEvent} from "../../data/interfaces";
 
 
-const abi: any = require("../contracts/RouletteContract");
+const abi: any = require("../../contracts/RouletteContract");
 
 interface IState {
     onCreate: boolean,
@@ -26,7 +26,7 @@ interface IProps {
     web3: Web3
 }
 
-class MatchCreateArea extends Component<IProps, IState> {
+class MatchCreateAreaLegacy extends Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
@@ -38,7 +38,7 @@ class MatchCreateArea extends Component<IProps, IState> {
     }
 
     public componentDidMount(): void {
-        sports.getEventsAtDate("2019-05-21").then(
+        sports.getEventsAtDate(new Date()).then(
             (events: ISportEvent[]) => this.setState({sportEvents: events}),
             (e: Error) => alert(e)
         );
@@ -174,4 +174,4 @@ class MatchCreateArea extends Component<IProps, IState> {
     }
 }
 
-export default MatchCreateArea;
+export default MatchCreateAreaLegacy;

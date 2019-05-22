@@ -1,12 +1,12 @@
 import React, {Component} from "react";
 import Card from "react-bootstrap/Card";
-import * as database from "../data/database";
+import * as database from "../../data/database";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import MatchOverview from "./MatchOverview";
 import Web3 from "web3"
-import {IMatch} from "../data/interfaces";
+import {IMatch} from "../../data/interfaces";
 
 // Define properties of the component Props
 interface IProps {

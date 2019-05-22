@@ -1,6 +1,6 @@
 import React, {Component, FormEvent} from "react";
-import LoadingCard from "./LoadingCard";
-import * as database from "../data/database";
+import LoadingCard from "../Misc/LoadingCard";
+import * as database from "../../data/database";
 import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import * as web3utils from 'web3-utils';
@@ -9,10 +9,10 @@ import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 import Contract from "web3/eth/contract";
 import Web3 from "web3"
-import ErrorCard from "./ErrorCard";
-import {IMatch} from "../data/interfaces";
+import ErrorCard from "../Misc/ErrorCard";
+import {IMatch} from "../../data/interfaces";
 
-const rouletteContractAbi = require("../contracts/RouletteContract");
+const rouletteContractAbi = require("../../contracts/RouletteContract");
 
 enum LoadingState {
     Loading,

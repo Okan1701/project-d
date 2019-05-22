@@ -18,6 +18,7 @@ class SiteNavbar extends Component<IProps, any> {
                     <Nav.Link as={Link} to="/">Home</Nav.Link>
                     <Nav.Link as={Link} to="/matches">Matches</Nav.Link>
                     <Nav.Link as={Link} to="/create">Create Match</Nav.Link>
+                    <Nav.Link as={Link} to="/createold">Create Match (Deprecated)</Nav.Link>
                     <Nav.Link as={Link} to="/leaderboard">Leaderboard</Nav.Link>
                 </Nav>
             );

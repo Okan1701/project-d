@@ -3,7 +3,7 @@ import Card from "react-bootstrap/Card";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
-import LoadingCard from "./LoadingCard";
+import LoadingCard from "./Misc/LoadingCard";
 import * as database from "../data/database";
 import {IPlayer} from "../data/interfaces";
 
