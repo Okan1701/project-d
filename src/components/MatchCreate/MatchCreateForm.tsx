@@ -51,7 +51,7 @@ class MatchCreateForm extends Component<IProps, IState> {
 
 
         // Get the ether that the user inputted and convert to wei
-        const wei: BN = web3utils.toWei(form[2].value);
+        const wei: BN = web3utils.toWei(form[1].value);
         const title: string = form[0].value;
 
         this.createMatch(title, wei).then(
