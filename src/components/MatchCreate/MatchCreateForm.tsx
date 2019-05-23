@@ -139,7 +139,14 @@ class MatchCreateForm extends Component<IProps, IState> {
                             <Form.Control type="text" placeholder="Enter match title here..." required/>
                         </Form.Group>
                         <Form.Group>
+                            <Form.Label>Select Team:</Form.Label>
+                          
+                            <Form.Control as="select">
+                              <option>{this.props.sportEvent.strHomeTeam}</option>
+                              <option>{this.props.sportEvent.strAwayTeam}</option>
+                            </Form.Control>
                             <Form.Label>Your bet</Form.Label>
+
                             <InputGroup>
                                 <InputGroup.Prepend>
                                     <InputGroup.Text id="inputGroupPrepend">ETH</InputGroup.Text>
