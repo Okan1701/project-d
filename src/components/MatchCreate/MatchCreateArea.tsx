@@ -52,8 +52,6 @@ class MatchCreateArea extends Component<IProps, IState> {
         let dateRangeStart = new Date();
         let dateRangeEnd = new Date();
         // The date range will be 7 days
-        dateRangeStart.setMonth(dateRangeStart.getMonth() + 1);
-        dateRangeEnd.setMonth(dateRangeEnd.getMonth() + 1);
         dateRangeEnd.setDate(dateRangeStart.getDate() + 7);
 
         // Get all the sport events from the specified date range
