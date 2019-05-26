@@ -2,14 +2,25 @@ import React, {Component} from "react";
 import Card from "react-bootstrap/Card";
 import Table from "react-bootstrap/Table";
 import {ISportEvent} from "../../data/interfaces";
+import {PaginatedArray} from "../../utils";
+
+interface IState {
+    pageNumber: number
+}
 
 interface IProps {
-    sportEvents: ISportEvent[],
+    sportEvents: PaginatedArray<ISportEvent>,
     show: boolean,
     onSelectCallBackFn?: (event: ISportEvent) => void
 }
 
-class MatchCreateSportsList extends Component<IProps, any> {
+class MatchCreateSportsList extends Component<IProps, IState> {
+    constructor(props: IProps) {
+        super(props);
+        this.state = {
+            pageNumber: 1
+        };
+    }
 
     /**
      * This is called by the HTML table in render() when user clicks on a table row
@@ -40,7 +51,7 @@ class MatchCreateSportsList extends Component<IProps, any> {
                         </tr>
                         </thead>
                         <tbody>
-                        {this.props.sportEvents.map((event: ISportEvent) => (
+                        {this.props.sportEvents.getPageItems(this.state.pageNumber).map((event: ISportEvent) => (
                             <tr onClick={() => this.onTableRowClick(event)}>
                                 <td>{event.strEvent}</td>
                                 <td>Baseball</td>

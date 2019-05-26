@@ -6,6 +6,7 @@ import ErrorCard from "../Misc/ErrorCard";
 import LoadingCard from "../Misc/LoadingCard";
 import MatchCreateSportsList from "./MatchCreateSportsList";
 import MatchCreateForm from "./MatchCreateForm";
+import {PaginatedArray} from "../../utils";
 
 
 enum DisplayState {
@@ -88,7 +89,7 @@ class MatchCreateArea extends Component<IProps, IState> {
                 </p>
                 <ErrorCard title="Error!" msg="An error has occured while proccesing your request. Please try again later!" show={this.state.displayState === DisplayState.Error}/>
                 <LoadingCard text={"Loading data, please wait..."} show={this.state.displayState === DisplayState.Loading}/>
-                <MatchCreateSportsList sportEvents={this.state.sportEvents} show={this.state.displayState === DisplayState.SportsList} onSelectCallBackFn={(event: ISportEvent) => this.onSportEventSelected(event)}/>
+                <MatchCreateSportsList sportEvents={new PaginatedArray<ISportEvent>(this.state.sportEvents, 20)} show={this.state.displayState === DisplayState.SportsList} onSelectCallBackFn={(event: ISportEvent) => this.onSportEventSelected(event)}/>
                 {createForm}
             </div>
         );
