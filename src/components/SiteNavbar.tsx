@@ -24,6 +24,24 @@ class SiteNavbar extends Component<IProps, any> {
         }
     }
 
+    public componentDidMount() {
+        window.addEventListener("scroll", this.handleScroll, {passive: true});
+    }
+
+    public componentWillUnmount() {
+        window.removeEventListener('scroll', this.handleScroll)
+    }
+
+    private handleScroll(): void {
+        let navbar: Element = document.getElementsByClassName("navbar")[0];
+        if (window.scrollY != 0) {
+            navbar.classList.add("navbar-shadow");
+        }
+        else {
+            navbar.classList.remove("navbar-shadow");
+        }
+    }
+
     private renderPlayerLink() {
         if (this.props.showContent && this.props.player !== undefined) {
             return (
