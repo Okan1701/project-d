@@ -6,6 +6,7 @@ import Table from "react-bootstrap/Table";
 import LoadingCard from "./Misc/LoadingCard";
 import * as database from "../data/database";
 import {IPlayer} from "../data/interfaces";
+import * as web3utils from 'web3-utils';
 
 enum SortMode {
     ByWins = "by wins",
@@ -71,6 +72,16 @@ class LeaderboardArea extends Component<IProps, IState> {
         });
     }
 
+    private formatWeiAsEther(wei: number) {
+        let formattedValue: string = web3utils.fromWei(web3utils.toBN(wei)) + " Ether";
+
+        if (wei > 0) {
+            return <div className="text-success">{"+"+formattedValue}</div>
+        } else {
+            return <div className="text-danger">{formattedValue}</div>
+        }
+    }
+
     /**
      * Renders the leaderboard table containing the data.
      * If the component is still loading data, we will display a loadingcard instead
@@ -96,7 +107,7 @@ class LeaderboardArea extends Component<IProps, IState> {
                         <td>{player.name}</td>
                         <td>{player.wins}</td>
                         <td>{player.losses}</td>
-                        <td>{player.earnings}</td>
+                        <td>{this.formatWeiAsEther(player.earnings)}</td>
                     </tr>
                 ))}
                 </tbody>
