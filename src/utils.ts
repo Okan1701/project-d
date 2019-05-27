@@ -28,7 +28,7 @@ export class PaginatedArray<T> {
         return this.array.slice(startIndex, endIndex)
     }
 
-    public getTotalPage(): number {
+    public getTotalPages(): number {
         let pageSize: number = Math.round(this.array.length / this.pageSize);
 
         if (pageSize < 1) pageSize = 1;

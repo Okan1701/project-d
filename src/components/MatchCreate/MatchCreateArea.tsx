@@ -75,14 +75,19 @@ class MatchCreateArea extends Component<IProps, IState> {
         // Only include the MatchCreateForm component if selectedSportEvent is actually defined. Else we get error :(
         let createForm;
         if (this.state.selectedSportEvent !== undefined) {
-            createForm = <MatchCreateForm web3={this.props.web3} sportEvent={this.state.selectedSportEvent as ISportEvent} show={true}/>
+            createForm = <MatchCreateForm
+                web3={this.props.web3}
+                sportEvent={this.state.selectedSportEvent as ISportEvent}
+                onReturnClick={() => this.setState({displayState: DisplayState.SportsList})}
+                show={this.state.displayState === DisplayState.CreateForm}/>
         }
 
         return (
             <div>
                 <h1>Match creation</h1>
                 <hr/>
-                <p>On this page, you can create a new betting match that other players can participate in! First you will need to select the sport event that you want to start a new bet on.
+                <p>On this page, you can create a new betting match that other players can participate in!
+                    <br/>First you will need to select the sport event that you want to start a new bet on.
                     From there you can define your starting bet. Once the date of the sport event has passed, the winners will recieve their rewards.
                 </p>
                 <ErrorCard title="Error!" msg="An error has occured while proccesing your request. Please try again later!" show={this.state.displayState === DisplayState.Error}/>

@@ -23,6 +23,7 @@ interface IState {
 interface IProps {
     web3: Web3,
     sportEvent: ISportEvent,
+    onReturnClick?: () => void
     show?: boolean
 }
 
@@ -131,7 +132,8 @@ class MatchCreateForm extends Component<IProps, IState> {
             <Card>
                 <Card.Body>
                     <Card.Title>Enter new match details</Card.Title>
-                    <strong>Selected sport: </strong>{`${this.props.sportEvent.strEvent} (${this.props.sportEvent.dateEvent} ${this.props.sportEvent.strTime})`}
+                    <strong>Selected
+                        sport: </strong>{`${this.props.sportEvent.strEvent} (${this.props.sportEvent.dateEvent} ${this.props.sportEvent.strTime})`}
                     <br/><br/>
                     <Form onSubmit={(e: FormEvent<HTMLFormElement>) => this.onSubmit(e)}>
                         <Form.Group>
@@ -150,8 +152,9 @@ class MatchCreateForm extends Component<IProps, IState> {
                         </Form.Group>
                         <p>Once you have created the match, other users will be able to see it and even participate
                             in it with their own ether!</p>
-                        <Button type="submit"
-                                disabled={this.state.isCreating}>{this.createLoadingSpinner()} Create</Button>
+                            <Button type="submit"
+                                    disabled={this.state.isCreating}>{this.createLoadingSpinner()} Create</Button>
+                            <Button variant="light" style={{marginLeft: "10px"}} onClick={this.props.onReturnClick}>Select another match</Button>
                     </Form>
                 </Card.Body>
             </Card>
