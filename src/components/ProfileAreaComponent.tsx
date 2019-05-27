@@ -1,8 +1,9 @@
 import React, {Component} from "react";
 import Card from "react-bootstrap/Card";
-import {getPlayer, IPlayer} from "../database";
+import {getPlayer} from "../data/database";
 import * as web3utils from 'web3-utils';
 import Web3 from "web3";
+import {IPlayer} from "../data/interfaces";
 
 interface IState {
     player: IPlayer,

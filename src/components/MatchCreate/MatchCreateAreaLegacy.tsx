@@ -5,33 +5,43 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import Web3 from "web3";
 import * as web3utils from 'web3-utils';
-import * as database from "../database";
+import * as database from "../../data/database";
 import BN from "bn.js";
 import Contract from "web3/eth/contract";
 import Spinner from "react-bootstrap/Spinner";
-import PopUpComponent from "./PopUpComponent";
+import PopUpComponent from "../Misc/PopUpComponent";
+import * as sports from "../../data/sports";
+import {IMatch, ISportEvent} from "../../data/interfaces";
 
 
-const abi: any = require("../contracts/RouletteContract");
+const abi: any = require("../../contracts/RouletteContract");
 
 interface IState {
-    onCreate : boolean
-    isCreating: boolean
+    onCreate: boolean,
+    isCreating: boolean,
+    sportEvents: ISportEvent[]
 }
 
 interface IProps {
     web3: Web3
 }
 
-class MatchCreateArea extends Component<IProps, IState> {
+class MatchCreateAreaLegacy extends Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
-
             onCreate: false,
-            isCreating: false
+            isCreating: false,
+            sportEvents: []
         };
-        this.closePopup = this.closePopup.bind(this)
+        this.closePopup = this.closePopup.bind(this);
+    }
+
+    public componentDidMount(): void {
+        sports.getEventsAtDate(new Date()).then(
+            (events: ISportEvent[]) => this.setState({sportEvents: events}),
+            (e: Error) => alert(e)
+        );
     }
 
     /**
@@ -49,7 +59,7 @@ class MatchCreateArea extends Component<IProps, IState> {
 
 
         // Get the ether that the user inputted and convert to wei
-        const wei: BN = web3utils.toWei(form[1].value);
+        const wei: BN = web3utils.toWei(form[2].value);
         const title: string = form[0].value;
 
         this.createMatch(title, wei).then(
@@ -63,7 +73,7 @@ class MatchCreateArea extends Component<IProps, IState> {
 
     /**
      *  This will use the form input to create a new match
-     *  First it will get the current account that is logged in and from there it will create a new smart contract    
+     *  First it will get the current account that is logged in and from there it will create a new smart contract
      *  Details of the contract will also be saved to database
      *  @param title: The name of the match. Will be saved to db
      *  @param wei: The amount of ether in 'wei' format
@@ -84,7 +94,7 @@ class MatchCreateArea extends Component<IProps, IState> {
         });
 
         // Create a new match entry in the database
-        let match: database.IMatch = {
+        let match: IMatch = {
             title: title,
             contract_address: contractInstance.options.address,
             start_date: "2019-05-05",
@@ -92,7 +102,7 @@ class MatchCreateArea extends Component<IProps, IState> {
             active: true
         };
         await database.createMatchEntry(match);
-        this.setState({onCreate: true, isCreating:false});
+        this.setState({onCreate: true, isCreating: false});
 
     }
 
@@ -115,14 +125,15 @@ class MatchCreateArea extends Component<IProps, IState> {
      * Hides the confirmation popup that is shown when match is created
      * This is done by setting onCreate of the state to false
      */
-    public closePopup(): void{
-        this.setState({onCreate:false})
+    public closePopup(): void {
+        this.setState({onCreate: false})
     }
 
     public render(): React.ReactNode {
         return <div>
 
-            <PopUpComponent title="Confirmation" message="Your match has been created!" onClose={this.closePopup} show={this.state.onCreate}/>
+            <PopUpComponent title="Confirmation" message="Your match has been created!" onClose={this.closePopup}
+                            show={this.state.onCreate}/>
             <h1>Match creation</h1>
             <hr/>
             <p>On this page, you can create a new betting match that other players can participate in!
@@ -136,17 +147,26 @@ class MatchCreateArea extends Component<IProps, IState> {
                             <Form.Control type="text" placeholder="Enter match title here..." required/>
                         </Form.Group>
                         <Form.Group>
+                            <Form.Label>Select sport event that the bet will be based on:</Form.Label>
+                            <Form.Control as="select">
+                                {this.state.sportEvents.map((event: ISportEvent) => <option
+                                    value={event.idEvent}>{`${event.strEvent} (${event.dateEvent} ${event.strTime})`}</option>)}
+                            </Form.Control>
+                        </Form.Group>
+                        <Form.Group>
                             <Form.Label>Your bet</Form.Label>
                             <InputGroup>
                                 <InputGroup.Prepend>
                                     <InputGroup.Text id="inputGroupPrepend">ETH</InputGroup.Text>
                                 </InputGroup.Prepend>
-                                <Form.Control type="double" placeholder="Enter bet value here..." pattern="(^-?[0-9.]+)" required />
+                                <Form.Control type="double" placeholder="Enter bet value here..." pattern="(^-?[0-9.]+)"
+                                              required/>
                             </InputGroup>
                         </Form.Group>
                         <p>Once you have created the match, other users will be able to see it and even participate
                             in it with their own ether!</p>
-                        <Button type="submit" disabled={this.state.isCreating}>{this.createLoadingSpinner()} Create</Button>
+                        <Button type="submit"
+                                disabled={this.state.isCreating}>{this.createLoadingSpinner()} Create</Button>
                     </Form>
                 </Card.Body>
             </Card>
@@ -154,4 +174,4 @@ class MatchCreateArea extends Component<IProps, IState> {
     }
 }
 
-export default MatchCreateArea;
+export default MatchCreateAreaLegacy;

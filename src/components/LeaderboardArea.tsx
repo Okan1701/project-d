@@ -3,8 +3,10 @@ import Card from "react-bootstrap/Card";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
-import LoadingCard from "./LoadingCard";
-import * as database from "../database";
+import LoadingCard from "./Misc/LoadingCard";
+import * as database from "../data/database";
+import {IPlayer} from "../data/interfaces";
+import * as web3utils from 'web3-utils';
 
 enum SortMode {
     ByWins = "by wins",
@@ -14,7 +16,7 @@ enum SortMode {
 
 interface IState {
     isLoading: boolean,
-    players: database.IPlayer[],
+    players: IPlayer[],
     sortTitle: string
 }
 
@@ -43,22 +45,22 @@ class LeaderboardArea extends Component<IProps, IState> {
     private async populateTable(sortMode: SortMode): Promise<void> {
         this.setState({isLoading: true});
 
-        let players: database.IPlayer[] = await database.getAllPlayers();
+        let players: IPlayer[] = await database.getAllPlayers();
 
         // See: https://www.w3schools.com/js/js_array_sort.asp for more info about sorting function
         switch (sortMode) {
             case SortMode.ByWins:
-                players.sort(function (p: database.IPlayer, b: database.IPlayer) {
+                players.sort(function (p: IPlayer, b: IPlayer) {
                     return b.wins - p.wins
                 });
                 break;
             case SortMode.ByLosses:
-                players.sort(function (p: database.IPlayer, b: database.IPlayer) {
+                players.sort(function (p: IPlayer, b: IPlayer) {
                     return b.losses - p.losses
                 });
                 break;
             case SortMode.ByEarnings:
-                players.sort(function (p: database.IPlayer, b: database.IPlayer) {
+                players.sort(function (p: IPlayer, b: IPlayer) {
                     return b.earnings - p.earnings
                 });
                 break;
@@ -68,6 +70,16 @@ class LeaderboardArea extends Component<IProps, IState> {
             players: players,
             sortTitle: sortMode
         });
+    }
+
+    private formatWeiAsEther(wei: number) {
+        let formattedValue: string = web3utils.fromWei(web3utils.toBN(wei)) + " Ether";
+
+        if (wei > 0) {
+            return <div className="text-success">{"+"+formattedValue}</div>
+        } else {
+            return <div className="text-danger">{formattedValue}</div>
+        }
     }
 
     /**
@@ -90,12 +102,12 @@ class LeaderboardArea extends Component<IProps, IState> {
                 </tr>
                 </thead>
                 <tbody>
-                {this.state.players.map((player: database.IPlayer) => (
+                {this.state.players.map((player: IPlayer) => (
                     <tr>
                         <td>{player.name}</td>
                         <td>{player.wins}</td>
                         <td>{player.losses}</td>
-                        <td>{player.earnings}</td>
+                        <td>{this.formatWeiAsEther(player.earnings)}</td>
                     </tr>
                 ))}
                 </tbody>

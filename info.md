@@ -26,7 +26,7 @@ Inside render method, the routing is defined.
 This is the current home page of our website. Currently all it does is display the wallet address of the current MetaMask account.
 <br>Nothing else happens here at the moment.
 
-#### MatchCreateArea.tsx
+#### MatchCreateAreaLegacy.tsx
 
 This represents the Match creation page. This component is responsible for providing a form that the user can fill in order to create a match.<br><br>
 The input will be used to create a match. Some important methods of the component:<br>
