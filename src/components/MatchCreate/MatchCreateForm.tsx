@@ -9,14 +9,13 @@ import * as database from "../../data/database";
 import BN from "bn.js";
 import Contract from "web3/eth/contract";
 import Spinner from "react-bootstrap/Spinner";
-import PopUpComponent from "../Misc/PopUpComponent";
 import {IMatch, ISportEvent} from "../../data/interfaces";
+import Alert from 'sweetalert2'
 
 
 const abi: any = require("../../contracts/RouletteContract");
 
 interface IState {
-    onCreate: boolean,
     isCreating: boolean,
 }
 
@@ -31,10 +30,8 @@ class MatchCreateForm extends Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
-            onCreate: false,
             isCreating: false,
         };
-        this.closePopup = this.closePopup.bind(this);
     }
 
     /**
@@ -57,8 +54,8 @@ class MatchCreateForm extends Component<IProps, IState> {
 
         this.createMatch(title, wei).then(
             () => console.log("Match has been created!"),
-            (reason: string) => {
-                alert(reason);
+            (e: Error) => {
+                Alert.fire({title: e.name, text: e.message, type: "error", confirmButtonText: "Ok"});
                 this.setState({isCreating: false});
             }
         )
@@ -95,7 +92,9 @@ class MatchCreateForm extends Component<IProps, IState> {
             active: true
         };
         await database.createMatchEntry(match);
-        this.setState({onCreate: true, isCreating: false});
+        this.setState({isCreating: false});
+        // noinspection JSIgnoredPromiseFromCall
+        Alert.fire({title: "Done!", text: "Match has been sucesfully created!", type: "success", confirmButtonText: "Ok"});
 
     }
 
@@ -114,21 +113,10 @@ class MatchCreateForm extends Component<IProps, IState> {
         return null;
     }
 
-    /**
-     * Hides the confirmation popup that is shown when match is created
-     * This is done by setting onCreate of the state to false
-     */
-    public closePopup(): void {
-        this.setState({onCreate: false})
-    }
-
     public render(): React.ReactNode {
         if (!this.props.show) return null;
 
         return <div>
-
-            <PopUpComponent title="Confirmation" message="Your match has been created!" onClose={this.closePopup}
-                            show={this.state.onCreate}/>
             <Card>
                 <Card.Body>
                     <Card.Title>Enter new match details</Card.Title>

@@ -1,13 +1,11 @@
 .page-content {
-    margin-top: 50px;
-    margin-left: 15%;
-    margin-right: 15%;
-    margin-bottom: 3%;
+    margin: 50px 15% 3%;
 }
 
 .register-form {
     margin-left: 30%;
     margin-right: 30%;
+    margin-top: 50px;
 }
 
 .App-logo {
@@ -28,6 +26,7 @@
 }
 
 .navbar {
+    transition: 250ms;
     background-color: darkslateblue;
     position: fixed;
     top: 0;
@@ -37,7 +36,9 @@
 
 .navbar-shadow {
     transition: 250ms;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    opacity: 0.9;
+    -webkit-backdrop-filter: blur(4px);
 }
 
 .btn-primary {
@@ -61,4 +62,8 @@
 
 .cursor-pointer {
     cursor: pointer;
+}
+
+.bg-blur {
+    transition: 250ms;
 }

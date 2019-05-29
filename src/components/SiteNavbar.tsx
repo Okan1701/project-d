@@ -48,7 +48,7 @@ class SiteNavbar extends Component<IProps, IState> {
 
     private handleScroll(): void {
         let navbar: Element = document.getElementsByClassName("navbar")[0];
-        if (window.scrollY != 0) {
+        if (window.scrollY !== 0) {
             navbar.classList.add("navbar-shadow");
         } else {
             navbar.classList.remove("navbar-shadow");

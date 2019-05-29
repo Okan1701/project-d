@@ -40,7 +40,7 @@ class MatchCreateSportsList extends Component<IProps, IState> {
         let totalPages = this.props.sportEvents.getTotalPages();
 
         for (let i=1; i <= totalPages; i++) {
-            items.push(<Pagination.Item onClick={() => this.setState({pageNumber: i})} active={i == this.state.pageNumber}>{i}</Pagination.Item>);
+            items.push(<Pagination.Item onClick={() => this.setState({pageNumber: i})} active={i === this.state.pageNumber}>{i}</Pagination.Item>);
         }
 
         return items;
