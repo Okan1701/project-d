@@ -10,7 +10,7 @@ import {getStrValueWithLeadingZero} from "../utils";
 export async function getEventsAtDate(date: Date): Promise<ISportEvent[]> {
     // The public API breaks if the day/month value do not have a leading 0 when the value is under 10
     // So we will use getStrValueWithLeadingZero which returns the string version with a leading 0
-    let dateString: string = `${date.getFullYear()}-${getStrValueWithLeadingZero(date.getMonth())}-${getStrValueWithLeadingZero(date.getDate())}`; // Example: 2019-05-20
+    let dateString: string = `${date.getFullYear()}-${getStrValueWithLeadingZero(date.getMonth() + 1)}-${getStrValueWithLeadingZero(date.getDate())}`; // Example: 2019-05-20
 
     let response: Response = await fetch(`https://www.thesportsdb.com/api/v1/json/1/eventsday.php?d=${dateString}&l=MLB`);
     // The sport events are located in the events object of the response JSON
