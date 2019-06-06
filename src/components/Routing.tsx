@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import MainArea from "./MainArea";
 import {Route, Switch} from "react-router-dom";
-import MatchCreateAreaLegacy from "./MatchCreate/MatchCreateAreaLegacy";
 import MatchesArea from "./Matches/MatchesArea";
 import Web3 from "web3";
 import ProfileAreaComponent from "./Profile/ProfileAreaComponent";
@@ -22,7 +21,6 @@ class Routing extends Component<IProps, any> {
                     <Route exact path="/" render={() => <MainArea web3={this.props.web3} />}/>
                     <Route path="/matches" render={() => <MatchesArea web3={this.props.web3} />}/>
                     <Route path="/create" render={() => <MatchCreateArea web3={this.props.web3}/>}/>
-                    <Route path="/createold" render={() => <MatchCreateAreaLegacy web3={this.props.web3} />}/>
                     <Route path="/profile" render={() => <ProfileAreaComponent web3={this.props.web3}/>}/>
                     <Route path="/leaderboard" render={() => <LeaderboardArea/>}/>
                 </Switch>

@@ -7,7 +7,7 @@ from api.models import Player
 class MatchSerializer(ModelSerializer):
     class Meta:
         model = Match
-        fields = ("id", "title", "contract_address", "start_date", "end_date", "active")
+        fields = ("id", "title", "contract_address", "start_date", "active", "sport_event_id", "status_code", "winning_team")
 
 class PlayerSerializer(ModelSerializer):
     class Meta:

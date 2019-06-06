@@ -1,6 +1,8 @@
 import {ISportEvent} from "./interfaces";
 import {getStrValueWithLeadingZero} from "../utils";
 
+const API_URL = "https://www.thesportsdb.com";
+
 /**
  * @description Get all the sport events of the MLB league from a specific date
  * @WARNING: The league parameter is currently hardcoded in the url (l=MLB)
@@ -38,4 +40,18 @@ export async function getEventsFromDateRange(dateStart: Date, dateEnd: Date): Pr
     }
 
     return events;
+}
+
+/**
+ * Get a specific event using it's event ID
+ * @param id: represents the unique ID of the sport event
+ */
+export async function getEventFromId(id: number): Promise<ISportEvent> {
+    let response: Response = await fetch(API_URL + `/api/v1/json/1/lookupevent.php?id=${id}`);
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch sport event with ID ${id} (${response.status})`);
+    }
+
+    return (await response.json()).events[0];
 }

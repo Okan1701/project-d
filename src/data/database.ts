@@ -66,7 +66,22 @@ export async function setMatchAsArchived(id: number): Promise<void> {
         console.log(await putResponse.json());
         throw Error(`Failed to archive match ID ${id}! (${putResponse.status})`)
     }
+}
 
+export async function updateMatch(match: IMatch): Promise<void> {
+    let putResponse = await fetch(API_URL + "/matches/" + match.id, {
+        method: "PUT",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(match)
+    });
+
+    if (!putResponse.ok) {
+        console.log(await putResponse.json());
+        throw Error(`Failed to archive match ID ${match.id}! (${putResponse.status})`)
+    }
 }
 
 /**

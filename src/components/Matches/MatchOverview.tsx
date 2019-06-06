@@ -1,16 +1,17 @@
 import React, {Component, FormEvent} from "react";
 import LoadingCard from "../Misc/LoadingCard";
 import * as database from "../../data/database";
+import * as sports from "../../data/sports";
 import Card from "react-bootstrap/Card";
-import Form from "react-bootstrap/Form";
 import * as web3utils from 'web3-utils';
-import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
-import Spinner from "react-bootstrap/Spinner";
 import Contract from "web3/eth/contract";
 import Web3 from "web3"
 import ErrorCard from "../Misc/ErrorCard";
-import {IMatch} from "../../data/interfaces";
+import {IMatch, ISportEvent, MatchStatusCode, MatchWinningTeam} from "../../data/interfaces";
+import Spinner from "react-bootstrap/Spinner";
+import Form from "react-bootstrap/Form";
+import InputGroup from "react-bootstrap/InputGroup";
 
 const rouletteContractAbi = require("../../contracts/RouletteContract");
 
@@ -29,7 +30,8 @@ interface IState {
     account: string,
     isSendingBet: boolean,
     disableFormSubmit: boolean,
-    sendBetResultMsg: string
+    sendBetResultMsg: string,
+    sportEvent?: ISportEvent
 }
 
 interface IProps {
@@ -77,14 +79,16 @@ class MatchOverview extends Component<IProps, IState> {
         let betValueWei: string = await contractInstance.methods.getTotalBetValue().call({from: accounts[0]});
         let betValueEther: string = await web3utils.fromWei(web3utils.toBN(betValueWei));
 
-        await this.setState({
+        let sportEvent: ISportEvent = await sports.getEventFromId(this.props.match.sport_event_id);
+
+        this.setState({
             players: players,
             totalBetValue: `${betValueEther} Ether`,
             contract: contractInstance,
             account: accounts[0],
-            loadingState: LoadingState.Loaded
+            loadingState: LoadingState.Loaded,
+            sportEvent: sportEvent
         });
-
     }
 
     public componentDidUpdate(prevProps: IProps, prevState: IState, snapshot: any): void {
@@ -119,11 +123,12 @@ class MatchOverview extends Component<IProps, IState> {
         });
 
         // The bet value that was entered in the form
-        const betValue: string = form[0].value;
+        const selectedTeam: number = form[0].value;
+        const betValue: string = form[1].value;
         const wei: string = web3utils.toWei(betValue);
 
         // Get the addPlayer method and send a transaction to it
-        let method = this.state.contract.methods.addPlayer();
+        let method = this.state.contract.methods.bet(selectedTeam);
         await method.send({
             from: this.state.account,
             value: wei.toString()
@@ -158,15 +163,16 @@ class MatchOverview extends Component<IProps, IState> {
      * Make the currently logged in user win the match
      * This will call 'win()' on the smart contract
      */
-    private async makeMeWinner(): Promise<void> {
+    private async claimRewards(winningTeam: MatchWinningTeam): Promise<void> {
         if (this.state.contract === undefined) return;
-        let method = this.state.contract.methods.win(0);
+        let method = this.state.contract.methods.getReward(winningTeam);
         await method.send({from: this.state.account});
-        await database.setMatchAsArchived(this.props.match.id as number);
+        alert("done");
+        //await database.setMatchAsArchived(this.props.match.id as number);
 
         // Update the stats for each player
         // We need to check the address and make sure we do not accidently make the winner lose his earnings stats
-        for (let index in this.state.players) {
+/*        for (let index in this.state.players) {
             if (this.state.players[index] === this.state.account) {
                 let contractMethod = this.state.contract.methods.getTotalBetValue();
                 let wonBetValueWei: number = await contractMethod.call({from: this.state.players[index]});
@@ -183,7 +189,7 @@ class MatchOverview extends Component<IProps, IState> {
                 await database.updatePlayerEarnings(this.state.players[index], lostBetValueWei * -1);
 
             }
-        }
+        }*/
     }
 
     /**
@@ -191,12 +197,20 @@ class MatchOverview extends Component<IProps, IState> {
      */
     private displayForm(): null | any {
         // Don't display anything if we don't have the required info
-        if (this.state.account === null || this.state.players === null) return null;
+        if (this.state.account === null || this.state.players === null || this.state.sportEvent === undefined) return null;
 
-        // If account address is already in players array, then account cannot bet!
-        if (this.state.players.includes(this.state.account)) {
+        // If account address is already in players array and can't claim rewards yet, then player will not be able to do anything!
+        if (this.state.players.includes(this.state.account) && this.props.match.status_code !== MatchStatusCode.CanClaimRewards) {
             return <div className="font-italic">You are already part of this match!</div>
-        } else {
+        }
+
+        // If match is already ready to decide winner, then players cannot bet!
+        if (!this.state.players.includes(this.state.account) && this.props.match.status_code !== MatchStatusCode.WaitingForMatchDate) {
+            return <div className="font-italic">This match is not accepting new players anymore!</div>
+        }
+
+        // Display form that allows players to participate if they haven't (while the match is still open to players)
+        if (this.props.match.status_code === MatchStatusCode.WaitingForMatchDate) {
             // If we are currently sending a bet, then the button will have a loading spinner
             let loadingElement;
             if (this.state.isSendingBet) {
@@ -208,6 +222,10 @@ class MatchOverview extends Component<IProps, IState> {
                     onSubmit={(e: FormEvent<HTMLFormElement>) => this.onBetSubmit(e).catch((ex: Error) => this.onBetSubmitFail(ex))}>
                     <Form.Group>
                         <Form.Label>You can participate in this match by betting your own ether:</Form.Label>
+                        <Form.Control as="select">
+                            <option value={0}>{this.state.sportEvent.strHomeTeam}</option>
+                            <option value={1}>{this.state.sportEvent.strAwayTeam}</option>
+                        </Form.Control><br/>
                         <InputGroup>
                             <InputGroup.Prepend>
                                 <InputGroup.Text id="inputGroupPrepend">ETH</InputGroup.Text>
@@ -218,6 +236,18 @@ class MatchOverview extends Component<IProps, IState> {
                         <Button type="submit" disabled={this.state.disableFormSubmit}>{loadingElement}Submit
                             bet!</Button>
                         <p>{this.state.sendBetResultMsg}</p>
+                    </Form.Group>
+                </Form>
+            );
+        }
+
+        if (this.props.match.status_code === MatchStatusCode.CanClaimRewards && this.props.match.winning_team !== MatchWinningTeam.None) {
+            return (
+                <Form>
+                    <Form.Group>
+                        <Form.Label>Rewards can be claimed! <br/>Click on the button below to claim your rewards. If the team
+                            that you bet on lost, then you will not recieve anything</Form.Label><br/>
+                        <Button onClick={() => this.claimRewards(this.props.match.winning_team)}>Claim rewards</Button>
                     </Form.Group>
                 </Form>
             );
@@ -235,6 +265,27 @@ class MatchOverview extends Component<IProps, IState> {
         );
     }
 
+    private renderDebugOptions() {
+        let updateMatch = async (selectedTeam: MatchWinningTeam) => {
+            this.props.match.winning_team = selectedTeam;
+            this.props.match.status_code = MatchStatusCode.CanClaimRewards;
+            await database.updateMatch(this.props.match);
+            this.componentDidMount();
+        };
+
+        if (this.props.match.winning_team === MatchWinningTeam.None) {
+            return (
+                <div>
+                    <strong>Debug options:</strong><br/>
+                    <Button onClick={() => updateMatch(MatchWinningTeam.HomeTeam)}>Make home team win</Button>
+                    <Button onClick={() => updateMatch(MatchWinningTeam.AwayTeam)} style={{marginLeft: "10px"}}>Make
+                        away team win</Button>
+                </div>
+            );
+        }
+
+    }
+
     private showMainComponent() {
         if (this.state.loadingState === LoadingState.Loaded) {
             return (
@@ -245,14 +296,19 @@ class MatchOverview extends Component<IProps, IState> {
                             total
                             bet value and options for you to place your own bet!</p>
                         <br/><h3>{this.props.match.title}</h3>
+                        {
+                            (this.state.sportEvent as ISportEvent).strHomeTeam +
+                            " vs " +
+                            (this.state.sportEvent as ISportEvent).strAwayTeam +
+                            " at " + (this.state.sportEvent as ISportEvent).dateEvent + " " + (this.state.sportEvent as ISportEvent).strTime}<br/><br/>
                         <strong>Amount of players: </strong>{this.state.players.length}<br/>
                         <strong>Total Bet Amount: </strong>{this.state.totalBetValue}<br/>
-                        <strong>Started on: </strong>{this.props.match.start_date}
+                        <strong>Started on: </strong>{this.props.match.start_date}<br/><br/>
+                        <strong>Status: </strong>{MatchStatusCode[this.props.match.status_code]}
                         <hr/>
                         {this.displayForm()}
                         <hr/>
-                        <strong>Debug options:</strong><br/>
-                        <Button onClick={() => this.makeMeWinner()}>Make me winner!</Button>
+                        {this.renderDebugOptions()}
                     </Card.Body>
                 </Card>
             );
