@@ -92,12 +92,12 @@ class MatchCreateForm extends Component<IProps, IState> {
             value: wei.toString() // The bet value in wei
         });
 
-        let method = contract.methods.addPlayer(teams);
-        await method.send({
-
-          from: accounts[0],
-          value: wei.toString()
-        });
+        // let method = contract.methods.addPlayer(teams);
+        // await method.send({
+        //
+        //   from: accounts[0],
+        //   value: wei.toString()
+        // });
 
         // Create a new match entry in the database
         let match: IMatch = {
