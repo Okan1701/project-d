@@ -86,18 +86,17 @@ class MatchCreateForm extends Component<IProps, IState> {
 
         // Deploy a new instance of the contract and send a transaction to it containing the bet value
         // The new instance will be stored in contractInstance
-        let tx: any = contract.deploy({data: abi.bytecode,arguments: [teams]});
+        let tx: any = contract.deploy({data: abi.bytecode,arguments: [0]});
         let contractInstance: Contract = await tx.send({
             from: accounts[0], // Account of the sender
             value: wei.toString() // The bet value in wei
         });
 
-        let method = contract.methods.addPlayer(teams);
-        await method.send({
-
-          from: accounts[0],
-          value: wei.toString()
-        });
+/*      let method = contract.methods.bet(1);
+      await method.send({
+        from: accounts[0],
+        value: wei.toString()
+      });*/
 
         // Create a new match entry in the database
         let match: IMatch = {

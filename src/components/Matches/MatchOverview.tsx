@@ -160,7 +160,7 @@ class MatchOverview extends Component<IProps, IState> {
      */
     private async makeMeWinner(): Promise<void> {
         if (this.state.contract === undefined) return;
-        let method = this.state.contract.methods.win();
+        let method = this.state.contract.methods.win(0);
         await method.send({from: this.state.account});
         await database.setMatchAsArchived(this.props.match.id as number);
 

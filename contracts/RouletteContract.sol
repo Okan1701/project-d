@@ -1,50 +1,100 @@
 pragma solidity ^0.5.1;
 
 contract RouletteContract {
-    address[] public players;
-    uint256 public totalBetValue = 0;
-    address[] public homeTeam;
-    address[] public awayTeam;
-    uint public teamSelected;
-
-    constructor(uint team) public payable {
+    address payable[] public players;
+    uint256 totalBetValue;
+    uint256 homeTeamamount;
+    uint256 awayTeamamount;
+    struct Player {
+        uint256 amountBet;
+        uint256 teamSelected;
     }
 
-    mapping(address => uint256) public playerBet;
-
-    function addPlayer() public payable {
+    constructor(uint256 _teamSelected) public payable {
+        playerBet[msg.sender].amountBet = msg.value;
+        playerBet[msg.sender].teamSelected = _teamSelected;
         players.push(msg.sender);
-        playerBet[msg.sender] = msg.value;
-        totalBetValue += msg.value;
 
-        if (teamSelected == 0)
+        if (_teamSelected == 0)
         {
-            homeTeam.push(msg.sender);
-        }
-        if (teamSelected == 1)
-        {
-            awayTeam.push(msg.sender);
+            homeTeamamount += msg.value;
         }
         else
         {
-            teamSelected = 10;
+            awayTeamamount += msg.value;
+        }
+    }
+
+    mapping(address => Player) public playerBet;
+
+
+    function bet(uint256 _teamSelected) public payable {
+        playerBet[msg.sender].amountBet = msg.value;
+        playerBet[msg.sender].teamSelected = _teamSelected;
+        players.push(msg.sender);
+
+        if (_teamSelected == 0)
+        {
+            homeTeamamount += msg.value;
+        }
+        else
+        {
+            awayTeamamount += msg.value;
         }
 
     }
 
-    function win() public {
-        msg.sender.transfer(totalBetValue);
+    function win(uint256 wonteam) public {
+
+
+        address payable[1000] memory winners;
+        uint256 count = 0;
+        uint256 totalLoser;
+        uint256 totalWinner;
+        uint256 betlol;
+        address add;
+        address payable playerAddress;
+
+        for (uint256 i = 0; i<players.length; i++)
+        {
+            playerAddress = players[i];
+
+            if(wonteam == playerBet[msg.sender].teamSelected)
+            {
+            winners[count] = playerAddress;
+            count++;
+            }
+
+        }
+        if (wonteam == 0)
+        {
+            totalWinner = homeTeamamount;
+            totalLoser = awayTeamamount;
+        }
+        else {
+            totalWinner = awayTeamamount;
+            totalLoser = homeTeamamount;
+        }
+        for (uint256 j = 0; j < count; j++)
+        {
+            if (winners[j] != address(0))
+            {
+                add = winners[j];
+                betlol = playerBet[add].amountBet;
+                winners[j].transfer((betlol*(10000+(totalLoser*10000/totalWinner)))/10000);
+            }
+        }
     }
 
-    function getPlayers() public view returns (address[] memory playersArray) {
+    function getPlayers() public view returns (address payable[] memory playersArray) {
         return players;
     }
 
     function getTotalBetValue() public view returns (uint256 betValue) {
-        return totalBetValue;
+        return homeTeamamount + awayTeamamount;
     }
 
     function getPlayerBet(address playerAddress) public view returns (uint256 betValue) {
-        return playerBet[playerAddress];
+        return playerBet[playerAddress].amountBet;
     }
 }
