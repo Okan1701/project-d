@@ -17,6 +17,8 @@ const abi: any = require("../../contracts/RouletteContract");
 
 interface IState {
     isCreating: boolean,
+    contract?: Contract,
+    account: string,
 }
 
 interface IProps {
@@ -31,6 +33,8 @@ class MatchCreateForm extends Component<IProps, IState> {
         super(props);
         this.state = {
             isCreating: false,
+            account: "",
+            contract: undefined,
         };
     }
 
@@ -49,10 +53,11 @@ class MatchCreateForm extends Component<IProps, IState> {
 
 
         // Get the ether that the user inputted and convert to wei
-        const wei: BN = web3utils.toWei(form[1].value);
+        const wei: BN = web3utils.toWei(form[2].value);
+        const team: number = form[1].value;
         const title: string = form[0].value;
 
-        this.createMatch(title, wei).then(
+        this.createMatch(title, wei, team).then(
             () => console.log("Match has been created!"),
             (e: Error) => {
                 Alert.fire({title: e.name, text: e.message, type: "error", confirmButtonText: "Ok"});
@@ -68,19 +73,30 @@ class MatchCreateForm extends Component<IProps, IState> {
      *  @param title: The name of the match. Will be saved to db
      *  @param wei: The amount of ether in 'wei' format
      */
-    private async createMatch(title: string, wei: BN): Promise<void> {
+    private async createMatch(title: string, wei: BN,team: number): Promise<void> {
 
         // Get the user accounts that are available in MetaMask
+
+      const teams: number = team;
+      // which team is bet on containing a 0 (homeTeam) or 1 (awayTeam)
+
         const accounts: string[] = await this.props.web3.eth.getAccounts();
         // Create the contract object that we will use to deploy and interact with the contract
         const contract = new this.props.web3.eth.Contract(abi.abi);
 
         // Deploy a new instance of the contract and send a transaction to it containing the bet value
         // The new instance will be stored in contractInstance
-        let tx: any = contract.deploy({data: abi.bytecode, arguments: []});
+        let tx: any = contract.deploy({data: abi.bytecode,arguments: [teams]});
         let contractInstance: Contract = await tx.send({
             from: accounts[0], // Account of the sender
             value: wei.toString() // The bet value in wei
+        });
+
+        let method = contract.methods.addPlayer(teams);
+        await method.send({
+
+          from: accounts[0],
+          value: wei.toString()
         });
 
         // Create a new match entry in the database
@@ -132,11 +148,12 @@ class MatchCreateForm extends Component<IProps, IState> {
                             <Form.Label>Select Team:</Form.Label>
                           
                             <Form.Control as="select">
-                              <option>{this.props.sportEvent.strHomeTeam}</option>
-                              <option>{this.props.sportEvent.strAwayTeam}</option>
+                              <option value={0}>{this.props.sportEvent.strHomeTeam}</option>
+                              <option value={1}>{this.props.sportEvent.strAwayTeam}</option>
                             </Form.Control>
                             <Form.Label>Your bet</Form.Label>
-
+                        </Form.Group>
+                      <Form.Group>
                             <InputGroup>
                                 <InputGroup.Prepend>
                                     <InputGroup.Text id="inputGroupPrepend">ETH</InputGroup.Text>

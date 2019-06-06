@@ -23,4 +23,6 @@ export interface ISportEvent {
     strEvent: string,
     dateEvent: string,
     strTime: string
+    strHomeTeam: string,
+    strAwayTeam: string,
 }
