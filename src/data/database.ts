@@ -195,3 +195,23 @@ export async function getAllPlayers(): Promise<IPlayer[]> {
 
     return players;
 }
+
+/**
+ * Delete the player with a given player address
+ * @param player: the player object that you want to delete. Needs to have valid address
+ */
+export async function deletePlayer(player: IPlayer): Promise<void> {
+    let response: Response = await fetch(API_URL + "/players/" + player.address,
+        {
+            method: "DELETE",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        }
+    );
+    
+    if (!response.ok) {
+        throw new Error(`Failed to delete player with ID={${player.address} (${response.status})`)
+    }
+}
