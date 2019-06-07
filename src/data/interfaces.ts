@@ -6,8 +6,10 @@ export interface IMatch {
     start_date: string,
     active: boolean,
     sport_event_id: number,
+    sport_event_data?: ISportEvent, // Optional, used for convenience
     status_code: MatchStatusCode,
-    winning_team: MatchWinningTeam
+    winning_team: MatchWinningTeam,
+    contract_data?: IContractData // Optional, used for convenience
 }
 
 // Defines a player object

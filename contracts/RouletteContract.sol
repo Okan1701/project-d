@@ -80,4 +80,12 @@ contract RouletteContract {
     function getPlayerBet(address playerAddress) public view returns (uint256 betValue) {
         return playerBet[playerAddress].amountBet;
     }
+
+    function getHomeTeamPlayers() public view returns (address payable[] memory homeTeamPlayersArray) {
+        return homeTeamPlayers;
+    }
+
+    function getAwayTeamPlayers() public view returns (address payable[] memory awayTeamPlayersArray) {
+        return awayTeamPlayers;
+    }
 }

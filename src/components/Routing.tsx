@@ -1,16 +1,20 @@
 import React, {Component} from "react";
 import MainArea from "./MainArea";
 import {Route, Switch} from "react-router-dom";
-import MatchesArea from "./Matches/MatchesArea";
 import Web3 from "web3";
 import ProfileAreaComponent from "./Profile/ProfileAreaComponent";
 import LeaderboardArea from "./LeaderboardArea";
 import {IPlayer} from "../data/interfaces";
 import MatchCreateArea from "./MatchCreate/MatchCreateArea";
+import MatchesArea from "./Matches/MatchesArea";
 
 interface IProps {
     web3: Web3,
     player: IPlayer
+}
+
+export interface IWeb3Prop {
+    web3: Web3
 }
 
 class Routing extends Component<IProps, any> {
