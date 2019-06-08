@@ -2,7 +2,6 @@ import React, {Component} from "react";
 import {IMatch, MatchStatusCode} from "../../data/interfaces";
 import Card from "react-bootstrap/Card";
 import ErrorCard from "../Misc/ErrorCard";
-import Button from "react-bootstrap/Button";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Table from "react-bootstrap/Table";
@@ -10,6 +9,7 @@ import * as web3utils from 'web3-utils';
 import Web3 from "web3";
 import MatchParticipateForm from "./MatchParticipateForm";
 import MatchDebugOptions from "./MatchDebugOptions";
+import MatchClaimReward from "./MatchClaimReward";
 
 interface IProps {
     match: IMatch,
@@ -41,6 +41,17 @@ class MatchOverview extends Component<IProps, any> {
                 </tbody>
             </Table>
         );
+    }
+
+    private renderUserOptions() {
+        switch (this.props.match.status_code) {
+            case MatchStatusCode.WaitingForMatchDate:
+                return <MatchParticipateForm match={this.props.match} web3={this.props.web3} refreshMatchFn={this.props.refreshMatchFn}/>;
+            case MatchStatusCode.CanClaimRewards:
+                return <MatchClaimReward web3={this.props.web3} match={this.props.match} refreshMatchFn={this.props.refreshMatchFn}/>
+            default:
+                return <MatchParticipateForm match={this.props.match} web3={this.props.web3} refreshMatchFn={this.props.refreshMatchFn}/>;
+        }
     }
 
     public render() {
@@ -81,7 +92,7 @@ class MatchOverview extends Component<IProps, any> {
                     </Col>
                 </Row>
                 <hr/>
-                <MatchParticipateForm match={this.props.match} web3={this.props.web3} refreshMatchFn={this.props.refreshMatchFn}/>
+                {this.renderUserOptions()}
                 <hr/>
                 <MatchDebugOptions match={this.props.match} refreshMatchFn={this.props.refreshMatchFn} />
             </Card.Body>

@@ -10,11 +10,13 @@ contract RouletteContract {
     struct Player {
         uint256 amountBet;
         uint256 teamSelected;
+        bool hasClaimedReward;
     }
 
     constructor(uint256 _teamSelected) public payable {
         playerBet[msg.sender].amountBet = msg.value;
         playerBet[msg.sender].teamSelected = _teamSelected;
+        playerBet[msg.sender].hasClaimedReward = false;
         players.push(msg.sender);
 
         if (_teamSelected == 0)
@@ -37,6 +39,7 @@ contract RouletteContract {
     function bet(uint256 _teamSelected) public payable {
         playerBet[msg.sender].amountBet = msg.value;
         playerBet[msg.sender].teamSelected = _teamSelected;
+        playerBet[msg.sender].hasClaimedReward = false;
         players.push(msg.sender);
 
         if (_teamSelected == 0)
@@ -65,6 +68,7 @@ contract RouletteContract {
             bonusEther = homeTeamamount / awayTeamPlayers.length;
         }
 
+        playerBet[msg.sender].hasClaimedReward = true;
         msg.sender.transfer(playerBet[msg.sender].amountBet + bonusEther);
 
     }
@@ -87,5 +91,9 @@ contract RouletteContract {
 
     function getAwayTeamPlayers() public view returns (address payable[] memory awayTeamPlayersArray) {
         return awayTeamPlayers;
+    }
+
+    function checkIfPlayerAlreadyClaimedReward() public view returns (bool hasClaimed) {
+        return playerBet[msg.sender].hasClaimedReward;
     }
 }

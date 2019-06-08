@@ -2,6 +2,9 @@ import React, {Component} from "react";
 import {IMatch, MatchWinningTeam} from "../../data/interfaces";
 import Alert from "sweetalert2";
 import Web3 from "web3";
+import Button from "react-bootstrap/Button";
+
+const rouletteContractAbi = require("../../contracts/RouletteContract");
 
 interface IState {
     isLoading: boolean,
@@ -9,8 +12,9 @@ interface IState {
 }
 
 interface IProps {
-    web3: Web3
-    match: IMatch
+    web3: Web3,
+    match: IMatch,
+    refreshMatchFn: (m: IMatch) => void
 }
 
 class MatchClaimReward extends Component<IProps, IState> {
@@ -61,6 +65,23 @@ class MatchClaimReward extends Component<IProps, IState> {
         return false;
     }
 
+    private async onButtonClick(): Promise<void> {
+        // Get the specific contract instance that belongs to this match using its address
+        const contractInstance: any = new this.props.web3.eth.Contract(rouletteContractAbi.abi, this.props.match.contract_address);
+
+        const account: string = (await this.props.web3.eth.getAccounts())[0];
+
+        let method = contractInstance.methods.getReward(this.props.match.winning_team);
+        await method.send({from: account});
+        await Alert.fire({
+            title: "Done!",
+            text: "Your reward has been claimed!",
+            type: "success"
+        });
+        this.props.refreshMatchFn(this.props.match);
+
+    }
+
     public componentDidMount(): void {
         this.checkIfRewardCanBeClaimed().catch((e: Error) => Alert.fire({
                 title: e.name,
@@ -73,6 +94,16 @@ class MatchClaimReward extends Component<IProps, IState> {
 
     public render() {
         if (this.state.isLoading) return <strong>Loading...</strong>;
+        if (!this.state.canClaimReward) return <strong>You cannot claim any rewards because you either aren't part of
+            this match or your chosen team lost!</strong>;
+
+        return (
+            <div>
+                <strong>Your chosen team has won! Press the button below to claim your rewards!</strong>
+                <br/><br/>
+                <Button onClick={() => this.onButtonClick().catch((e: Error) => Alert.fire({title: e.name, text: e.message, type: "error"}))}>Claim reward</Button>
+            </div>
+        );
     }
 }
 

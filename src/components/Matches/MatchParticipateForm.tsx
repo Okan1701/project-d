@@ -155,7 +155,7 @@ class MatchParticipateForm extends Component<IProps, IState> {
                         <InputGroup.Prepend>
                             <InputGroup.Text id="inputGroupPrepend">ETH</InputGroup.Text>
                         </InputGroup.Prepend>
-                        <Form.Control type="number" placeholder="Enter bet value here..." required/>
+                        <Form.Control type="double" placeholder="Enter bet value here..." required pattern="(^-?[0-9.]+)"/>
                     </InputGroup>
                     <br/>
                     {this.renderSubmitBtn()}
