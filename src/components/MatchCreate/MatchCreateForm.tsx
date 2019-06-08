@@ -95,7 +95,7 @@ class MatchCreateForm extends Component<IProps, IState> {
       });*/
 
         let date: Date = new Date();
-        let formattedDate: string = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDay()}`;
+        let formattedDate: string = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
         console.log(formattedDate);
 
         // Create a new match entry in the database
@@ -108,6 +108,7 @@ class MatchCreateForm extends Component<IProps, IState> {
             status_code: MatchStatusCode.WaitingForMatchDate,
             winning_team: MatchWinningTeam.None
         };
+        console.log(match);
         await database.createMatchEntry(match);
         this.setState({isCreating: false});
         // noinspection JSIgnoredPromiseFromCall

@@ -25,6 +25,7 @@ export interface IPlayer {
 export interface ISportEvent {
     idEvent: number,
     strEvent: string,
+    strLeague: string
     dateEvent: string,
     strTime: string
     strHomeTeam: string,
@@ -41,5 +42,6 @@ export enum MatchStatusCode {
 export enum MatchWinningTeam {
     None = -1,
     HomeTeam = 0,
-    AwayTeam = 1
+    AwayTeam = 1,
+    All = 2
 }

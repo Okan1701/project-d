@@ -14,7 +14,7 @@ export async function getEventsAtDate(date: Date): Promise<ISportEvent[]> {
     // So we will use getStrValueWithLeadingZero which returns the string version with a leading 0
     let dateString: string = `${date.getFullYear()}-${getStrValueWithLeadingZero(date.getMonth() + 1)}-${getStrValueWithLeadingZero(date.getDate())}`; // Example: 2019-05-20
 
-    let response: Response = await fetch(`https://www.thesportsdb.com/api/v1/json/1/eventsday.php?d=${dateString}&l=MLB`);
+    let response: Response = await fetch(`https://www.thesportsdb.com/api/v1/json/1/eventsday.php?d=${dateString}&s=Soccer`);
     // The sport events are located in the events object of the response JSON
     return (await response.json()).events;
 }

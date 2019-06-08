@@ -58,14 +58,18 @@ contract RouletteContract {
 
     function getReward(uint256 winningTeam) public payable {
 
-        if (playerBet[msg.sender].teamSelected != winningTeam) return;
+        if (playerBet[msg.sender].teamSelected != winningTeam && winningTeam != 2) return;
 
         uint256 bonusEther;
 
         if (winningTeam == 0) {
             bonusEther = awayTeamamount / homeTeamPlayers.length;
-        } else {
+        }
+        if (winningTeam == 1) {
             bonusEther = homeTeamamount / awayTeamPlayers.length;
+        }
+        if (winningTeam == 2) {
+            bonusEther = 0;
         }
 
         playerBet[msg.sender].hasClaimedReward = true;

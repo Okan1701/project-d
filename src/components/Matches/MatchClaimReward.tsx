@@ -6,9 +6,15 @@ import Button from "react-bootstrap/Button";
 
 const rouletteContractAbi = require("../../contracts/RouletteContract");
 
+enum RewardClaimStatus {
+    CanClaim,
+    NotPartOfTeam,
+    AlreadyClaimed
+}
+
 interface IState {
     isLoading: boolean,
-    canClaimReward: boolean
+    canClaimReward: RewardClaimStatus
 }
 
 interface IProps {
@@ -22,7 +28,7 @@ class MatchClaimReward extends Component<IProps, IState> {
         super(props);
         this.state = {
             isLoading: true,
-            canClaimReward: false
+            canClaimReward: RewardClaimStatus.NotPartOfTeam
         };
     }
 
@@ -35,16 +41,31 @@ class MatchClaimReward extends Component<IProps, IState> {
             throw new ReferenceError("Contract data is not defined!");
         }
 
+        // Get the specific contract instance that belongs to this match using its address
+        const contractInstance = new this.props.web3.eth.Contract(rouletteContractAbi.abi, this.props.match.contract_address);
+
         const homeTeam: IContractPlayer[] = this.props.match.contract_data.homeTeamPlayers;
         const awayTeam: IContractPlayer[] = this.props.match.contract_data.awayTeamPlayers;
         const accountAddr: string = (await this.props.web3.eth.getAccounts())[0];
 
-        let canClaim;
+        let canClaim: RewardClaimStatus = RewardClaimStatus.CanClaim;
 
-        if (this.props.match.winning_team === MatchWinningTeam.HomeTeam) {
-            canClaim = this.isInTeam(accountAddr, homeTeam);
-        } else {
-            canClaim = this.isInTeam(accountAddr, awayTeam);
+        switch (this.props.match.winning_team) {
+            case MatchWinningTeam.HomeTeam:
+                if (!this.isInTeam(accountAddr, homeTeam)) canClaim = RewardClaimStatus.NotPartOfTeam;
+                if ((await this.rewardIsAlreadyClaimed(contractInstance, accountAddr))) canClaim = RewardClaimStatus.AlreadyClaimed;
+                break;
+            case MatchWinningTeam.AwayTeam:
+                if (!this.isInTeam(accountAddr, awayTeam)) canClaim = RewardClaimStatus.NotPartOfTeam;
+                if ((await this.rewardIsAlreadyClaimed(contractInstance, accountAddr))) canClaim = RewardClaimStatus.AlreadyClaimed;
+                break;
+            case MatchWinningTeam.All:
+                if (!this.isInTeam(accountAddr, awayTeam) && !this.isInTeam(accountAddr, homeTeam)) canClaim = RewardClaimStatus.NotPartOfTeam;
+                if ((await this.rewardIsAlreadyClaimed(contractInstance, accountAddr))) canClaim = RewardClaimStatus.AlreadyClaimed;
+                break;
+            default:
+                canClaim = RewardClaimStatus.NotPartOfTeam;
+                break;
         }
 
         this.setState({
@@ -67,7 +88,7 @@ class MatchClaimReward extends Component<IProps, IState> {
 
     private async onButtonClick(): Promise<void> {
         // Get the specific contract instance that belongs to this match using its address
-        const contractInstance: any = new this.props.web3.eth.Contract(rouletteContractAbi.abi, this.props.match.contract_address);
+        const contractInstance = new this.props.web3.eth.Contract(rouletteContractAbi.abi, this.props.match.contract_address);
 
         const account: string = (await this.props.web3.eth.getAccounts())[0];
 
@@ -82,6 +103,11 @@ class MatchClaimReward extends Component<IProps, IState> {
 
     }
 
+    private async rewardIsAlreadyClaimed(contractInstance: any, account: string): Promise<boolean> {
+        let method = contractInstance.methods.checkIfPlayerAlreadyClaimedReward();
+        return await method.call({from: account});
+    }
+
     public componentDidMount(): void {
         this.checkIfRewardCanBeClaimed().catch((e: Error) => Alert.fire({
                 title: e.name,
@@ -94,14 +120,21 @@ class MatchClaimReward extends Component<IProps, IState> {
 
     public render() {
         if (this.state.isLoading) return <strong>Loading...</strong>;
-        if (!this.state.canClaimReward) return <strong>You cannot claim any rewards because you either aren't part of
+        if (this.state.canClaimReward === RewardClaimStatus.NotPartOfTeam) return <strong>You cannot claim any rewards
+            because you either aren't part of
             this match or your chosen team lost!</strong>;
+        if (this.state.canClaimReward === RewardClaimStatus.AlreadyClaimed) return <strong>You already claimed your
+            reward!</strong>;
 
         return (
             <div>
                 <strong>Your chosen team has won! Press the button below to claim your rewards!</strong>
                 <br/><br/>
-                <Button onClick={() => this.onButtonClick().catch((e: Error) => Alert.fire({title: e.name, text: e.message, type: "error"}))}>Claim reward</Button>
+                <Button onClick={() => this.onButtonClick().catch((e: Error) => Alert.fire({
+                    title: e.name,
+                    text: e.message,
+                    type: "error"
+                }))}>Claim reward</Button>
             </div>
         );
     }

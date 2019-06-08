@@ -32,6 +32,7 @@ class MatchDebugOptions extends Component<IProps, any> {
                     <br/>
                     <Button onClick={() => this.makeTeamWin(MatchWinningTeam.HomeTeam)}>Make home team win</Button>
                     <Button onClick={() => this.makeTeamWin(MatchWinningTeam.AwayTeam)} style={{marginLeft: "10px"}}>Make away team win</Button>
+                    <Button onClick={() => this.makeTeamWin(MatchWinningTeam.All)} style={{marginLeft: "10px"}}>Make all teams win</Button>
                 </div>
             );
         }
