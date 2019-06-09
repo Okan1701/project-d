@@ -1,6 +1,12 @@
 import {IMatch, IPlayer} from "./interfaces";
 
-const API_URL = "http://localhost:8000/api";
+let API_URL: string;
+
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    API_URL= "http://localhost:8000/api";
+} else {
+    API_URL = "http://145.24.222.145:8000/api";
+}
 
 /**
  * Create a new match row in the backend database

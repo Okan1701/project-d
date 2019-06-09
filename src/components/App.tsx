@@ -3,7 +3,7 @@ import '../css/App.css';
 import SiteNavbar from "./SiteNavbar";
 import Web3 from "web3";
 import Routing from "./Routing";
-import {BrowserRouter} from "react-router-dom";
+import {BrowserRouter, HashRouter} from "react-router-dom";
 import * as database from "../data/database";
 import RegisterComponent from "./RegisterComponent";
 import {IPlayer} from "../data/interfaces";
@@ -112,20 +112,20 @@ class App extends Component<any, IState> {
                 return <strong>You are not logged in MetaMask!</strong>;
             case LoadingState.notRegistered:
                 return (
-                    <BrowserRouter>
+                    <HashRouter>
                         <SiteNavbar showContent={false}/>
                         <br/>
                         <RegisterComponent accounts={this.state.accounts}
                                            onRegisteredCallback={() => this.onRegistered()}/>
-                    </BrowserRouter>
+                    </HashRouter>
                 );
             case LoadingState.loaded:
                 return (
-                    <BrowserRouter basename={process.env.PUBLIC_URL}>
+                    <HashRouter>
                         <SiteNavbar showContent={true} player={this.state.player}/>
                         <br/>
                         <Routing web3={this.state.web3 as Web3} player={this.state.player as IPlayer}/>
-                    </BrowserRouter>
+                    </HashRouter>
                 );
             default:
                 return <strong>An undefined error occured! State: {this.state.loadingState}</strong>
