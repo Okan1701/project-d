@@ -121,7 +121,7 @@ class App extends Component<any, IState> {
                 );
             case LoadingState.loaded:
                 return (
-                    <BrowserRouter>
+                    <BrowserRouter basename={process.env.PUBLIC_URL}>
                         <SiteNavbar showContent={true} player={this.state.player}/>
                         <br/>
                         <Routing web3={this.state.web3 as Web3} player={this.state.player as IPlayer}/>
