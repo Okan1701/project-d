@@ -12,4 +12,4 @@ class ApiConfig(AppConfig):
         if not self.watcher_started:
             self.watcher_started = True
             watcher = MatchWatcherService(Match)
-            watcher.check_all_matches()
+            watcher.run()

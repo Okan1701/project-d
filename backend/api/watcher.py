@@ -1,10 +1,12 @@
 import requests
 import api.console as console
 import datetime
+import threading
+import time
 
 
 class MatchWatcherService():
-    match_update_interval = 10
+    match_update_interval_seconds = 60
     queryset_type = None
 
     def __init__(self, queryset_type):
@@ -23,14 +25,25 @@ class MatchWatcherService():
 
         # If the sport hasn't actually occured, then we dont have to update
         if sport_date > now:
+            console.log(f"Did not update match {match.id} because sport_date is greater than today")
             return False
 
+        # If match has already been updated, then skip
+        if match.status_code == 2:
+            console.log(f"Did not update match {match.id} because status_code equals 2 (CanClaimReward)")
+            return
+
         if sport_date <= now:
-            # Set match status to pending
-            match.status_code = 1
+            if match.status_code == 0:
+                # Set match status to pending
+                match.status_code = 1
+                match.save()
+                console.log(f"Updated match {match.id} status_code to 1 (pending)")
+                return True
 
             # If both scores are not yet known, match will stay in pending
             if sport_data["intHomeScore"] is None or sport_data["intAwayScore"] is None:
+                console.log(f"Did not update match {match.id} because team scores are not available!")
                 return False
 
             home_score = int(sport_data["intHomeScore"])
@@ -48,21 +61,31 @@ class MatchWatcherService():
                 match.status_code = 2
 
             match.save()
+            console.log(f"Updated match {match.id} status_code to 2, final scores have been updated")
             return True
 
     def check_all_matches(self):
-        console.log("Running check on all matches...")
-        total_count = 0  # Total matches it checked
-        update_count = 0  # Amount of matches that it actually updated
+        while True:
+            console.log("Running check on all matches...")
+            total_count = 0  # Total matches it checked
+            update_count = 0  # Amount of matches that it actually updated
 
-        # Get the active matches
-        queryset = self.queryset_type.objects.filter(active=True)
+            # Get the active matches
+            queryset = self.queryset_type.objects.filter(active=True)
 
-        # Loop through each match and update it
-        for match in queryset:
-            total_count += 1
-            has_updated = self.update_match(match)
-            if has_updated:
-                update_count += 1
+            # Loop through each match and update it
+            for match in queryset:
+                total_count += 1
+                has_updated = self.update_match(match)
+                if has_updated:
+                    update_count += 1
 
-        console.log(f"{update_count} out of {total_count} matches have been updated!")
+            console.log(f"{update_count} out of {total_count} matches have been updated! Next update in {self.match_update_interval_seconds} seconds")
+
+            # Delay the next loop iteration
+            time.sleep(self.match_update_interval_seconds)
+
+    def run(self):
+        # Create instance of the thread that will run check_all_matches and start it
+        thread_instance = threading.Thread(target=self.check_all_matches, name="MatchWatcherThread")
+        thread_instance.start()
