@@ -2,14 +2,9 @@ from django.apps import AppConfig
 
 from api.watcher import MatchWatcherService
 
+MATCH_WATCHER_STARTED = False
+MATCH_WATCHER_SERVICE = None
 
 class ApiConfig(AppConfig):
     name = 'api'
-    watcher_started = False
 
-    def ready(self):
-        from api.models import Match
-        if not self.watcher_started:
-            self.watcher_started = True
-            watcher = MatchWatcherService(Match)
-            watcher.run()

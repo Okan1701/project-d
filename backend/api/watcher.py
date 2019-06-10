@@ -8,9 +8,14 @@ import time
 class MatchWatcherService():
     match_update_interval_seconds = 60
     queryset_type = None
+    loop = True
 
     def __init__(self, queryset_type):
         self.queryset_type = queryset_type
+
+    def terminate_loop(self):
+        console.log("Terminating watcher loop!")
+        self.loop = False
 
     def update_match(self, match):
         # Fetch sport data
@@ -65,7 +70,7 @@ class MatchWatcherService():
             return True
 
     def check_all_matches(self):
-        while True:
+        while self.loop:
             console.log("Running check on all matches...")
             total_count = 0  # Total matches it checked
             update_count = 0  # Amount of matches that it actually updated
@@ -89,3 +94,4 @@ class MatchWatcherService():
         # Create instance of the thread that will run check_all_matches and start it
         thread_instance = threading.Thread(target=self.check_all_matches, name="MatchWatcherThread")
         thread_instance.start()
+        console.log("Watcher service started!")

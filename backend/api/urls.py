@@ -1,7 +1,13 @@
 from django.urls import path
 from api import views
+from api.models import Match
+from api.watcher import MatchWatcherService
 
 urlpatterns = [
+    # Start match watcher
+    path("startservice", views.start_watcher),
+    path("endservice", views.end_watcher),
+
     # Matches
     path("matches/", views.MatchesView.as_view()),
     path("matches/create", views.MatchCreateView.as_view()),
