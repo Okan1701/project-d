@@ -120,6 +120,7 @@ export async function registerPlayer(player: IPlayer): Promise<void> {
     );
 
     if (!response.ok) {
+        console.log(response)
         throw Error(`Failed to create new player! (${response.status})`)
     }
 }

@@ -7,6 +7,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import * as web3utils from 'web3-utils';
 import Spinner from "react-bootstrap/Spinner";
+import * as database from "../../data/database";
 
 const rouletteContractAbi = require("../../contracts/RouletteContract");
 
@@ -89,7 +90,7 @@ class MatchParticipateForm extends Component<IProps, IState> {
             from: this.state.address,
             value: wei.toString()
         });
-
+        await database.updatePlayerEarnings(this.state.address, parseInt(wei) * -1);
 
         await Alert.fire({title: "Done!", text: "Your bet has been succesfully submitted!", type: "success"});
         this.setState({isSendingBet: false});

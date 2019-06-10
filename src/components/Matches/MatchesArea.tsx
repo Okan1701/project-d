@@ -77,18 +77,26 @@ class MatchesArea extends Component<IWeb3Prop, IState> {
 
         // The players array only contain their addressed, we wanna replace that with their profile names and bet value
         for (let i = 0; i < homePlayersAddr.length; i++) {
-            homePlayers.push({
-                address: homePlayersAddr[i],
-                name: (await database.getPlayer(homePlayersAddr[i])).name,
-                betValue: await contractInstance.methods.getPlayerBet(homePlayersAddr[i]).call({from: accounts[0]})
-            });
+            try {
+                homePlayers.push({
+                    address: homePlayersAddr[i],
+                    name: (await database.getPlayer(homePlayersAddr[i])).name,
+                    betValue: await contractInstance.methods.getPlayerBet(homePlayersAddr[i]).call({from: accounts[0]})
+                });
+            } catch (e) {
+                console.log(e);
+            }
         }
         for (let i = 0; i < awayPlayersAddr.length; i++) {
-            awayPlayers.push({
-                address: awayPlayersAddr[i],
-                name: (await database.getPlayer(awayPlayersAddr[i])).name,
-                betValue: await contractInstance.methods.getPlayerBet(awayPlayersAddr[i]).call({from: accounts[0]})
-            });
+            try {
+                awayPlayers.push({
+                    address: awayPlayersAddr[i],
+                    name: (await database.getPlayer(awayPlayersAddr[i])).name,
+                    betValue: await contractInstance.methods.getPlayerBet(awayPlayersAddr[i]).call({from: accounts[0]})
+                });
+            } catch (e) {
+                console.log(e);
+            }
         }
 
         // The data will be stored in a object which will be assigned to the match object
@@ -159,7 +167,8 @@ class MatchesArea extends Component<IWeb3Prop, IState> {
                 return <strong>Page not yet implemented</strong>;
             case MatchesAreaSelection.MatchOverview:
                 if (this.state.selectedMatch === undefined) break;
-                return <MatchOverview match={this.state.selectedMatch} web3={this.props.web3} refreshMatchFn={(m: IMatch) => this.getMatchDetails(m)}/>
+                return <MatchOverview match={this.state.selectedMatch} web3={this.props.web3}
+                                      refreshMatchFn={(m: IMatch) => this.getMatchDetails(m)}/>
         }
     }
 
