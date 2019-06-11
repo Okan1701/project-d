@@ -1,6 +1,8 @@
 import {ISportEvent} from "./interfaces";
 import {getStrValueWithLeadingZero} from "../utils";
 
+const API_URL = "https://www.thesportsdb.com";
+
 /**
  * @description Get all the sport events of the MLB league from a specific date
  * @WARNING: The league parameter is currently hardcoded in the url (l=MLB)
@@ -12,7 +14,7 @@ export async function getEventsAtDate(date: Date): Promise<ISportEvent[]> {
     // So we will use getStrValueWithLeadingZero which returns the string version with a leading 0
     let dateString: string = `${date.getFullYear()}-${getStrValueWithLeadingZero(date.getMonth() + 1)}-${getStrValueWithLeadingZero(date.getDate())}`; // Example: 2019-05-20
 
-    let response: Response = await fetch(`https://www.thesportsdb.com/api/v1/json/1/eventsday.php?d=${dateString}&l=MLB`);
+    let response: Response = await fetch(`https://www.thesportsdb.com/api/v1/json/1/eventsday.php?d=${dateString}&s=Soccer`);
     // The sport events are located in the events object of the response JSON
     return (await response.json()).events;
 }
@@ -38,4 +40,18 @@ export async function getEventsFromDateRange(dateStart: Date, dateEnd: Date): Pr
     }
 
     return events;
+}
+
+/**
+ * Get a specific event using it's event ID
+ * @param id: represents the unique ID of the sport event
+ */
+export async function getEventFromId(id: number): Promise<ISportEvent> {
+    let response: Response = await fetch(API_URL + `/api/v1/json/1/lookupevent.php?id=${id}`);
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch sport event with ID ${id} (${response.status})`);
+    }
+
+    return (await response.json()).events[0];
 }

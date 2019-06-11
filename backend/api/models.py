@@ -7,8 +7,10 @@ class Match(models.Model):
     title = models.CharField(max_length=40)
     contract_address = models.CharField(max_length=256)
     start_date = models.DateField()
-    end_date = models.DateField()
     active = models.BooleanField(default=True)
+    sport_event_id = models.IntegerField()
+    status_code = models.IntegerField()
+    winning_team = models.IntegerField()
 
     def __str__(self):
         return self.title + " @ " + self.contract_address

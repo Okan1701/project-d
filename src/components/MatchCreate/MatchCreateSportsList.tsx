@@ -68,8 +68,8 @@ class MatchCreateSportsList extends Component<IProps, IState> {
                             <tr onClick={() => this.onTableRowClick(event)} className="cursor-pointer">
                                 <td>{event.idEvent}</td>
                                 <td>{event.strEvent}</td>
-                                <td>Baseball</td>
-                                <td>MLB</td>
+                                <td>Soccer</td>
+                                <td>{event.strLeague}</td>
                                 <td>{event.dateEvent + " " + event.strTime}</td>
                             </tr>
                         ))}

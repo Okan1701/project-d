@@ -4,8 +4,12 @@ export interface IMatch {
     title: string,
     contract_address: string,
     start_date: string,
-    end_date: string,
-    active: boolean
+    active: boolean,
+    sport_event_id: number,
+    sport_event_data?: ISportEvent, // Optional, used for convenience
+    status_code: MatchStatusCode,
+    winning_team: MatchWinningTeam,
+    contract_data?: IContractData // Optional, used for convenience
 }
 
 // Defines a player object
@@ -21,8 +25,23 @@ export interface IPlayer {
 export interface ISportEvent {
     idEvent: number,
     strEvent: string,
+    strLeague: string
     dateEvent: string,
     strTime: string
     strHomeTeam: string,
     strAwayTeam: string,
+}
+
+export enum MatchStatusCode {
+    WaitingForMatchDate = 0,
+    Pending = 1,
+    CanClaimRewards = 2,
+    RewardsClaimed = 3
+}
+
+export enum MatchWinningTeam {
+    None = -1,
+    HomeTeam = 0,
+    AwayTeam = 1,
+    All = 2
 }

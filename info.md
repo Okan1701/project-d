@@ -33,7 +33,7 @@ The input will be used to create a match. Some important methods of the componen
 * `onSubmit()`: When user clicks 'Create', this method is called. It handles the input and passes it to `createMatch()`.
 * `createMatch()`: This is an _async_ method that creates a match by first deploying a new smart contract instance, gettings its contract address and then saving it to database along with match title and creation date.
 
-#### MatchesArea.tsx
+#### MatchesAreaOldOld.tsx
 
 This component is the Matches page which displays a list of matches along with match details of the selected match.<br>
 It consists of a bootstrap grid with match list on the left and match details on the right.

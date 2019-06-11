@@ -1,6 +1,12 @@
 import {IMatch, IPlayer} from "./interfaces";
 
-const API_URL = "http://localhost:8000/api";
+let API_URL: string;
+
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+    API_URL= "http://localhost:8000/api";
+} else {
+    API_URL = "http://145.24.222.145:8000/api";
+}
 
 /**
  * Create a new match row in the backend database
@@ -66,7 +72,22 @@ export async function setMatchAsArchived(id: number): Promise<void> {
         console.log(await putResponse.json());
         throw Error(`Failed to archive match ID ${id}! (${putResponse.status})`)
     }
+}
 
+export async function updateMatch(match: IMatch): Promise<void> {
+    let putResponse = await fetch(API_URL + "/matches/" + match.id, {
+        method: "PUT",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(match)
+    });
+
+    if (!putResponse.ok) {
+        console.log(await putResponse.json());
+        throw Error(`Failed to archive match ID ${match.id}! (${putResponse.status})`)
+    }
 }
 
 /**
