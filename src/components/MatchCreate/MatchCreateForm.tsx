@@ -153,9 +153,10 @@ class MatchCreateForm extends Component<IProps, IState> {
                               <option value={0}>{this.props.sportEvent.strHomeTeam}</option>
                               <option value={1}>{this.props.sportEvent.strAwayTeam}</option>
                             </Form.Control>
-                            <Form.Label>Your bet</Form.Label>
+
                         </Form.Group>
                       <Form.Group>
+                        <Form.Label>Your bet</Form.Label>
                             <InputGroup>
                                 <InputGroup.Prepend>
                                     <InputGroup.Text id="inputGroupPrepend">ETH</InputGroup.Text>
@@ -164,8 +165,11 @@ class MatchCreateForm extends Component<IProps, IState> {
                                               required/>
                             </InputGroup>
                         </Form.Group>
+                      <p>Keep in mind there are some small fees to create a match. These fees will be visible in
+                        the metamask extension once you click the create button. </p>
                         <p>Once you have created the match, other users will be able to see it and even participate
                             in it with their own ether!</p>
+
                             <Button type="submit"
                                     disabled={this.state.isCreating}>{this.createLoadingSpinner()} Create</Button>
                             <Button variant="light" style={{marginLeft: "10px"}} onClick={this.props.onReturnClick}>Select another match</Button>
