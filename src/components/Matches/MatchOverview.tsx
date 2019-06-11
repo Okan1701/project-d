@@ -73,7 +73,7 @@ class MatchOverview extends Component<IProps, IState> {
         // Get the specific contract instance that belongs to this match using its address
         const contractInstance: any = new this.props.web3.eth.Contract(rouletteContractAbi.abi, this.props.match.contract_address);
 
-        let players: string[] = await contractInstance.methods.getPlayers().call({from: accounts[0]});
+        let players: string[] = await contractInstance.methods.bet(0).call({from: accounts[0]});
         let betValueWei: string = await contractInstance.methods.getTotalBetValue().call({from: accounts[0]});
         let betValueEther: string = await web3utils.fromWei(web3utils.toBN(betValueWei));
 

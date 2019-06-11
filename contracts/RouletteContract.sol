@@ -44,7 +44,7 @@ contract RouletteContract {
 
     }
 
-    function win(uint256 wonteam) public {
+    function win(uint256 wonteam) public payable {
 
 
         address payable[1000] memory winners;
