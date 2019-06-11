@@ -116,6 +116,7 @@ class MatchClaimReward extends Component<IProps, IState> {
         let method = contractInstance.methods.getReward(this.props.match.winning_team);
         await method.send({from: account});
         await database.updatePlayerEarnings(account, parseInt(this.state.rewardValue));
+        await database.updatePlayerWins(account);
         await Alert.fire({
             title: "Done!",
             text: "Your reward has been claimed!",

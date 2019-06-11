@@ -10,7 +10,7 @@ import * as web3utils from 'web3-utils';
 
 enum SortMode {
     ByWins = "by wins",
-    ByLosses = "by losses",
+    ByGameCount = "by total games",
     ByEarnings = "by earnings"
 }
 
@@ -54,9 +54,9 @@ class LeaderboardArea extends Component<IProps, IState> {
                     return b.wins - p.wins
                 });
                 break;
-            case SortMode.ByLosses:
+            case SortMode.ByGameCount:
                 players.sort(function (p: IPlayer, b: IPlayer) {
-                    return b.losses - p.losses
+                    return b.game_count - p.game_count
                 });
                 break;
             case SortMode.ByEarnings:
@@ -74,6 +74,10 @@ class LeaderboardArea extends Component<IProps, IState> {
 
     private formatWeiAsEther(wei: number) {
         let formattedValue: string = web3utils.fromWei(web3utils.toBN(wei)) + " Ether";
+
+        if (wei === 0) {
+            return <div>{formattedValue}</div>
+        }
 
         if (wei > 0) {
             return <div className="text-success">{"+"+formattedValue}</div>
@@ -97,7 +101,7 @@ class LeaderboardArea extends Component<IProps, IState> {
                 <tr>
                     <th>Username</th>
                     <th>Wins</th>
-                    <th>Losses</th>
+                    <th>Total Games</th>
                     <th>Earnings</th>
                 </tr>
                 </thead>
@@ -106,7 +110,7 @@ class LeaderboardArea extends Component<IProps, IState> {
                     <tr>
                         <td>{player.name}</td>
                         <td>{player.wins}</td>
-                        <td>{player.losses}</td>
+                        <td>{player.game_count}</td>
                         <td>{this.formatWeiAsEther(player.earnings)}</td>
                     </tr>
                 ))}
@@ -132,8 +136,8 @@ class LeaderboardArea extends Component<IProps, IState> {
                                     onClick={() => this.populateTable(SortMode.ByWins).catch((e: Error) => alert(e))}>Sort
                                     by wins</Button>
                                 <Button
-                                    onClick={() => this.populateTable(SortMode.ByLosses).catch((e: Error) => alert(e))}>Sort
-                                    by losses</Button>
+                                    onClick={() => this.populateTable(SortMode.ByGameCount).catch((e: Error) => alert(e))}>Sort
+                                    by total games</Button>
                                 <Button
                                     onClick={() => this.populateTable(SortMode.ByEarnings).catch((e: Error) => alert(e))}>Sort
                                     by earnings</Button>

@@ -58,7 +58,7 @@ class RegisterComponent extends Component<IProps, IState> {
             address: this.props.accounts[0],
             name: inputName,
             wins: 0,
-            losses: 0,
+            game_count: 0,
             earnings: 0
         };
         database.registerPlayer(player).then(

@@ -21,7 +21,8 @@ enum MatchesAreaSelection {
 
 interface IState {
     selectedArea: MatchesAreaSelection
-    matches: IMatch[],
+    allMatches: IMatch[],
+    myMatches: IMatch[]
     isLoading: boolean
     selectedMatch?: IMatch
 }
@@ -31,7 +32,8 @@ class MatchesArea extends Component<IWeb3Prop, IState> {
         super(props);
         this.state = {
             selectedArea: MatchesAreaSelection.AvailableMatches,
-            matches: [],
+            allMatches: [],
+            myMatches: [],
             isLoading: true
         };
     }
@@ -42,12 +44,20 @@ class MatchesArea extends Component<IWeb3Prop, IState> {
      */
     private async getAllMatches(): Promise<void> {
         let matches: IMatch[] = await database.getActiveMatches();
+        let account: string = (await this.props.web3.eth.getAccounts())[0];
+
+        let ownedMatches: IMatch[] = [];
+
         for (let i = 0; i < matches.length; i++) {
             matches[i].sport_event_data = await sports.getEventFromId(matches[i].sport_event_id);
+            if (matches[i].owner === account) {
+                ownedMatches.push(matches[i]);
+            }
         }
 
         this.setState({
-            matches: matches,
+            allMatches: matches,
+            myMatches: ownedMatches,
             isLoading: false
         });
     }
@@ -161,10 +171,17 @@ class MatchesArea extends Component<IWeb3Prop, IState> {
 
         switch (this.state.selectedArea) {
             case MatchesAreaSelection.AvailableMatches:
-                return <MatchesList matches={this.state.matches}
-                                    onMatchSelectCallbackFn={(m: IMatch) => this.getMatchDetails(m)}/>;
+                return <MatchesList matches={this.state.allMatches}
+                                    onMatchSelectCallbackFn={(m: IMatch) => this.getMatchDetails(m)}
+                                    title="All current betting matches"/>;
+
+
             case MatchesAreaSelection.MyMatches:
-                return <strong>Page not yet implemented</strong>;
+                return <MatchesList matches={this.state.myMatches}
+                                    onMatchSelectCallbackFn={(m: IMatch) => this.getMatchDetails(m)}
+                                    title="Matches that have been created by you"/>;
+
+
             case MatchesAreaSelection.MatchOverview:
                 if (this.state.selectedMatch === undefined) break;
                 return <MatchOverview match={this.state.selectedMatch} web3={this.props.web3}

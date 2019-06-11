@@ -32,7 +32,7 @@ class ProfileAreaComponent extends Component<IProps, IState> {
                 address: "Loading...",
                 name: "Loading...",
                 wins: 0,
-                losses: 0,
+                game_count: 0,
                 earnings: 0
             },
             playerLoaded: false

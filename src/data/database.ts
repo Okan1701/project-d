@@ -3,7 +3,7 @@ import {IMatch, IPlayer} from "./interfaces";
 let API_URL: string;
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
-    API_URL= "http://localhost:8000/api";
+    API_URL = "http://localhost:8000/api";
 } else {
     API_URL = "http://145.24.222.145:8000/api";
 }
@@ -120,7 +120,7 @@ export async function registerPlayer(player: IPlayer): Promise<void> {
     );
 
     if (!response.ok) {
-        console.log(response)
+        console.log(response);
         throw Error(`Failed to create new player! (${response.status})`)
     }
 }
@@ -167,16 +167,37 @@ export async function updatePlayer(player: IPlayer): Promise<void> {
 }
 
 /**
- * Update the win/loss stats of the player.
+ * Update the win stat of the player.
  * It will first fetch the entire player, update it and then send it back to db.
  * @param address: the string wallet address of the player
- * @param hasWon: boolean representing if it should increment the wins stat or the losses stat
+ * @param incrNumber: optional parameter where you can define by how much the win counter should be increased
  */
-export async function updatePlayerWinLoss(address: string, hasWon: boolean): Promise<void> {
+export async function updatePlayerWins(address: string, incrNumber?: number): Promise<void> {
+    let incr: number;
+    if (incrNumber === undefined) incr = 1;
+    else incr = incrNumber;
+
     let player: IPlayer = await getPlayer(address);
 
-    if (hasWon) player.wins++;
-    else player.losses++;
+    player.wins += incr;
+
+    await updatePlayer(player);
+}
+
+/**
+ * Update the game count (total amount of participated games) stat of the player.
+ * It will first fetch the entire player, update it and then send it back to db.
+ * @param address: the string wallet address of the player
+ * @param incrNumber: optional parameter where you can define by how much the game counter should be increased
+ */
+export async function updatePlayerGameCount(address: string, incrNumber?: number): Promise<void> {
+    let incr: number;
+    if (incrNumber === undefined) incr = 1;
+    else incr = incrNumber;
+
+    let player: IPlayer = await getPlayer(address);
+
+    player.game_count += incr;
 
     await updatePlayer(player);
 }
@@ -212,7 +233,7 @@ export async function getAllPlayers(): Promise<IPlayer[]> {
     // we will need to convert it to number for all player objects
     let players: IPlayer[] = await response.json();
     for await (let player of players) {
-       player.earnings = parseInt(player.earnings.toString());
+        player.earnings = parseInt(player.earnings.toString());
     }
 
     return players;
@@ -232,7 +253,7 @@ export async function deletePlayer(player: IPlayer): Promise<void> {
             },
         }
     );
-    
+
     if (!response.ok) {
         throw new Error(`Failed to delete player with ID={${player.address} (${response.status})`)
     }

@@ -2,6 +2,7 @@
 export interface IMatch {
     id?: number
     title: string,
+    owner: string
     contract_address: string,
     start_date: string,
     active: boolean,
@@ -18,7 +19,7 @@ export interface IPlayer {
     address: string,
     name: string
     wins: number,
-    losses: number
+    game_count: number
     earnings: number
 }
 
