@@ -29,10 +29,20 @@ export async function createMatchEntry(match: IMatch): Promise<void> {
 
 /**
  * Get all the matches that exist in the backend database
+ * If activeMatchesOnly parameter is true, then only matches with active=True flag will be fetched
+ * @param activeMatchesOnly: set to true if only actives matches should be fetched
  * @returns an IMatch[] array containing the match objects
  */
-export async function getActiveMatches(): Promise<IMatch[]> {
-    let response: Response = await fetch(API_URL + "/matches/active");
+export async function getMatches(activeMatchesOnly?: boolean): Promise<IMatch[]> {
+    let url = API_URL + "/matches/";
+    let active: boolean = false;
+
+    // If activeMatchesOnly param is defined, use it's value instead
+    if (activeMatchesOnly !== undefined) active = activeMatchesOnly;
+    // If only active matches need to be fetched, then change the url
+    if (active) url += "/active/";
+
+    let response: Response = await fetch(url);
 
     if (!response.ok) {
         throw Error(`Failed to retrieve match data! (${response.status})`);

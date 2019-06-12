@@ -16,14 +16,16 @@ const rouletteContractAbi = require("../../contracts/RouletteContract");
 enum MatchesAreaSelection {
     AvailableMatches,
     MyMatches,
+    ParticipatingMatches,
     MatchOverview
 }
 
 interface IState {
     selectedArea: MatchesAreaSelection
     allMatches: IMatch[],
-    myMatches: IMatch[]
-    isLoading: boolean
+    myMatches: IMatch[],
+    participatingMatches: IMatch[],
+    isLoading: boolean,
     selectedMatch?: IMatch
 }
 
@@ -34,6 +36,7 @@ class MatchesArea extends Component<IWeb3Prop, IState> {
             selectedArea: MatchesAreaSelection.AvailableMatches,
             allMatches: [],
             myMatches: [],
+            participatingMatches: [],
             isLoading: true
         };
     }
@@ -43,23 +46,61 @@ class MatchesArea extends Component<IWeb3Prop, IState> {
      * For each match, we will also get it's sport event id and load the sport data
      */
     private async getAllMatches(): Promise<void> {
-        let matches: IMatch[] = await database.getActiveMatches();
+        let matches: IMatch[] = await database.getMatches();
         let account: string = (await this.props.web3.eth.getAccounts())[0];
 
+        let activeMatches: IMatch[] = [];
         let ownedMatches: IMatch[] = [];
+        let participatingMatches: IMatch[] = [];
 
         for (let i = 0; i < matches.length; i++) {
             matches[i].sport_event_data = await sports.getEventFromId(matches[i].sport_event_id);
+            // Avoid calling isParticipatingInMatch if we already know that the player is owner of match
+            let checkIfParticipating: boolean = true;
+
             if (matches[i].owner === account) {
                 ownedMatches.push(matches[i]);
+                participatingMatches.push(matches[i]);
+                checkIfParticipating = false;
+            }
+            if ((await this.isParticipatingInMatch(account, matches[i])) && checkIfParticipating) {
+                participatingMatches.push(matches[i]);
+            }
+            if (matches[i].active) {
+                activeMatches.push(matches[i]);
             }
         }
 
         this.setState({
-            allMatches: matches,
+            allMatches: activeMatches,
             myMatches: ownedMatches,
+            participatingMatches: participatingMatches,
             isLoading: false
         });
+    }
+
+    /**
+     * Check if a player is participating in the given match by checking it's contract
+     * @param accountAddr: the player address that we wanna check if participating
+     * @param match: the match object that we wanna check
+     * @returns true if participating, false otherwise
+     */
+    private async isParticipatingInMatch(accountAddr: string, match: IMatch): Promise<boolean> {
+        // Get the specific contract instance that belongs to this match using its address
+        const contractInstance: any = new this.props.web3.eth.Contract(rouletteContractAbi.abi, match.contract_address);
+
+        // Get player address from the home team and away team
+        const homePlayersAddr: string[] = await contractInstance.methods.getHomeTeamPlayers().call({from: accountAddr});
+        const awayPlayersAddr: string[] = await contractInstance.methods.getAwayTeamPlayers().call({from: accountAddr});
+        const totalPlayersAddr: string[] = homePlayersAddr.concat(awayPlayersAddr);
+
+        // Check if player address is part of the team
+        let isParticipating: boolean = false;
+        for (let i = 0; i < totalPlayersAddr.length; i++) {
+            if (totalPlayersAddr[i] === accountAddr) isParticipating = true;
+        }
+
+        return isParticipating;
     }
 
     /**
@@ -169,6 +210,7 @@ class MatchesArea extends Component<IWeb3Prop, IState> {
             );
         }
 
+        // Render the correct Card body depending on which area user selected
         switch (this.state.selectedArea) {
             case MatchesAreaSelection.AvailableMatches:
                 return <MatchesList matches={this.state.allMatches}
@@ -180,6 +222,11 @@ class MatchesArea extends Component<IWeb3Prop, IState> {
                 return <MatchesList matches={this.state.myMatches}
                                     onMatchSelectCallbackFn={(m: IMatch) => this.getMatchDetails(m)}
                                     title="Matches that have been created by you"/>;
+
+            case MatchesAreaSelection.ParticipatingMatches:
+                return <MatchesList matches={this.state.participatingMatches}
+                                    onMatchSelectCallbackFn={(m: IMatch) => this.getMatchDetails(m)}
+                                    title="Matches that you are part of"/>;
 
 
             case MatchesAreaSelection.MatchOverview:
@@ -223,6 +270,12 @@ class MatchesArea extends Component<IWeb3Prop, IState> {
                                     <Nav.Link bsPrefix={this.getNavTabBsPrefix(MatchesAreaSelection.MyMatches)}
                                               onClick={() => this.setState({selectedArea: MatchesAreaSelection.MyMatches})}>
                                         My matches
+                                    </Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link bsPrefix={this.getNavTabBsPrefix(MatchesAreaSelection.ParticipatingMatches)}
+                                              onClick={() => this.setState({selectedArea: MatchesAreaSelection.ParticipatingMatches})}>
+                                        Participating matches
                                     </Nav.Link>
                                 </Nav.Item>
                                 {this.renderMatchOverviewTab()}
