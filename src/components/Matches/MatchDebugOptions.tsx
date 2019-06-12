@@ -14,6 +14,7 @@ class MatchDebugOptions extends Component<IProps, any> {
     private async makeTeamWin(team: MatchWinningTeam) {
         this.props.match.winning_team = team;
         this.props.match.status_code = MatchStatusCode.CanClaimRewards;
+        this.props.match.active = false;
         await database.updateMatch(this.props.match);
         await Alert.fire({
             title: "Done!",
