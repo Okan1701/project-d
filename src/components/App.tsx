@@ -7,6 +7,7 @@ import {BrowserRouter, HashRouter} from "react-router-dom";
 import * as database from "../data/database";
 import RegisterComponent from "./RegisterComponent";
 import {IPlayer} from "../data/interfaces";
+import Card from "react-bootstrap/Card";
 
 enum LoadingState {
     detectProvider,
@@ -104,13 +105,80 @@ class App extends Component<any, IState> {
     public render(): ReactNode {
         switch (this.state.loadingState) {
             case LoadingState.detectProvider:
-                return <strong>Detecting Web3 provider...</strong>;
             case LoadingState.noProvider:
-                return <strong>No web3 provider found!</strong>;
+              return (
+                <div>
+                  <HashRouter>
+                    <SiteNavbar showContent={true}/>
+                  </HashRouter>
+                  <div className={"register-form"}>
+                    <br/>
+                    <Card>
+                      <Card.Body>
+                        <h3>Welcome to our Ethereum sport betting website!</h3>
+                        <br/>
+                        <Card.Title>You do not have MetaMask installed</Card.Title>
+                        <p>
+                          In order to use this website, you are required to install the extension MetaMask. To get this extension go to
+                          the add-on store of your preferred browser.
+                        </p>
+                        <strong>
+                          Supported Browsers:
+                        </strong>
+                        <ul>
+                          <li>Chrome</li>
+                          <li>Firefox</li>
+                          <li>Opera</li>
+                          <li>Brave</li>
+                        </ul>
+                        <p>For more information, visit the official MetaMask website:</p>
+                        <a href={"https://metamask.io/"}>https://metamask.io/</a>
+                        <br/>
+                        <br/>
+                        <strong>If you have MetaMask installed, please try to refresh the page</strong>
+                        <br/>
+                      </Card.Body>
+                    </Card>
+                  </div>
+                </div>
+              )
             case LoadingState.awaitProviderAuth:
-                return <strong>Awaiting permission from MetaMask</strong>;
             case LoadingState.providerAuthFailed:
-                return <strong>You are not logged in MetaMask!</strong>;
+                return (
+                  <div>
+                    <HashRouter>
+                    <SiteNavbar showContent={true}/>
+                    </HashRouter>
+                    <div className={"register-form"}>
+                    <br/>
+                  <Card>
+                  <Card.Body>
+                    <h3>Welcome to our Ethereum sport betting website!</h3>
+                    <br/>
+                    <Card.Title>You are not logged in to MetaMask</Card.Title>
+                    <p>
+                      In order to use this website, you are required to log in into MetaMask. You can do so by clicking the MetaMask icon in the top right corner of your browser.
+                    </p>
+                    <strong>
+                      Supported Browsers:
+                    </strong>
+                    <ul>
+                      <li>Chrome</li>
+                      <li>Firefox</li>
+                      <li>Opera</li>
+                      <li>Brave</li>
+                    </ul>
+                    <p>If you haven't used MetaMask before or need help, visit the official MetaMask website for more information:</p>
+                    <a href={"https://metamask.io/"}>https://metamask.io/</a>
+                    <br/>
+                    <br/>
+                    <strong>If you have logged in to MetaMask, please try to refresh the page </strong>
+                    <br/>
+                  </Card.Body>
+                  </Card>
+                    </div>
+                  </div>
+                )
             case LoadingState.notRegistered:
                 return (
                     <HashRouter>
