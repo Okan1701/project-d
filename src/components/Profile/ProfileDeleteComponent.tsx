@@ -16,7 +16,7 @@ class ProfileDeleteComponent extends Component<IProps, any> {
      * This requires the player prop to have the correct player object.
      * Will also display an error popup if database operation fails
      */
-    private async onDeleteClick() {
+    private async onDeleteClick(): Promise<void> {
         let res: SweetAlertResult = await Alert.fire({
             title: "Please confirm",
             text: "This action cannot be reversed!",

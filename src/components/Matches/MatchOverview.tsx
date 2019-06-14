@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {IMatch, MatchStatusCode} from "../../data/interfaces";
+import {IMatch, MatchStatusCode, MatchWinningTeam} from "../../data/interfaces";
 import Card from "react-bootstrap/Card";
 import ErrorCard from "../Misc/ErrorCard";
 import Row from "react-bootstrap/Row";
@@ -10,6 +10,8 @@ import Web3 from "web3";
 import MatchParticipateForm from "./MatchParticipateForm";
 import MatchDebugOptions from "./MatchDebugOptions";
 import MatchClaimReward from "./MatchClaimReward";
+import Swal from "sweetalert2";
+import Alert from "react-bootstrap/Alert";
 
 interface IProps {
     match: IMatch,
@@ -54,6 +56,46 @@ class MatchOverview extends Component<IProps, any> {
         }
     }
 
+    /**
+     * Get the name of the host player by gettings its address and checking the teams
+     * No database call is made here.
+     * @param hostPlayerAddr: the address of the host player
+     */
+    private getHostPlayerName(hostPlayerAddr: string): string {
+        if (this.props.match.contract_data === undefined) return "N/A";
+
+        const allPlayers: IContractPlayer[] = this.props.match.contract_data.homeTeamPlayers.concat(this.props.match.contract_data.awayTeamPlayers);
+
+        for (let i = 0; i < allPlayers.length; i++) {
+            if (allPlayers[i].address === hostPlayerAddr) return allPlayers[i].name;
+        }
+
+        // if code reaches here, it means it failed to find host player name
+        Swal.fire({title: "An error occured!", text: "Failed to load name of host player! Host player is not part of match", type: "error"});
+        throw new Error("Failed loading host player name. Host address is not part of any contract team");
+    }
+
+    private renderWinningTeamText(winningTeam: MatchWinningTeam): string {
+        switch (winningTeam) {
+            case MatchWinningTeam.None:
+                return "No team has won yet";
+            case MatchWinningTeam.HomeTeam:
+                return "Home team has won!";
+            case MatchWinningTeam.AwayTeam:
+                return "Away team has won!";
+            case MatchWinningTeam.All:
+                return "Both teams have won! (Draw)";
+            default:
+                return MatchWinningTeam[winningTeam];
+        }
+    }
+
+    private renderIsArchivedAlert() {
+        if (!this.props.match.active) {
+            return <Alert variant="secondary">This match is archived</Alert>
+        }
+    }
+
     public render() {
 
         if (this.props.match.sport_event_data === undefined || this.props.match.contract_data === undefined) {
@@ -63,6 +105,7 @@ class MatchOverview extends Component<IProps, any> {
 
         return (
             <Card.Body>
+                {this.renderIsArchivedAlert()}
                 <h3>{this.props.match.title}</h3>
                 <p>Here you can see additional details of this betting match along with options to participate if
                     possible</p>
@@ -70,6 +113,7 @@ class MatchOverview extends Component<IProps, any> {
                     <Col>
                         <Card>
                             <Card.Body>
+                                <strong>Created by: </strong>{this.getHostPlayerName(this.props.match.owner)}<br/>
                                 <strong>Created on: </strong>{this.props.match.start_date}<br/>
                                 <strong>Sport event: </strong>{this.props.match.sport_event_data.strEvent}<br/>
                                 <strong>End
@@ -84,7 +128,8 @@ class MatchOverview extends Component<IProps, any> {
                             <Card.Body>
                                 <strong>Total players: </strong>{this.props.match.contract_data.playerCount}<br/>
                                 <strong>Total bet value: </strong>{this.props.match.contract_data.totalBetValue}<br/>
-                                <strong>Status: </strong>{MatchStatusCode[this.props.match.status_code]}
+                                <strong>Status: </strong>{MatchStatusCode[this.props.match.status_code]}<br/>
+                                <strong>Winning team: </strong>{this.renderWinningTeamText(this.props.match.winning_team)}
                             </Card.Body>
                         </Card>
                         <br/>

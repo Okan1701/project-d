@@ -1,3 +1,5 @@
+import * as web3utils from "web3-utils";
+
 /**
  * Turn a number into a string with a leading zero
  * The sports API breaks if the numbers don't have a leading zero so this is a quick workaround...
@@ -9,6 +11,14 @@ export function getStrValueWithLeadingZero(value: number): string {
     } else {
         return value.toString()
     }
+}
+
+export function makeFirstCharUppercase(target: string): string {
+    return target.charAt(0).toUpperCase() + target.slice(1);
+}
+
+export function formatWeiAsEther(wei: string): string {
+    return web3utils.fromWei(wei) + " Ether";
 }
 
 /**

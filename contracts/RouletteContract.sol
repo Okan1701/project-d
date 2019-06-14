@@ -77,6 +77,24 @@ contract RouletteContract {
 
     }
 
+    function getRewardValue(uint256 winningTeam) public view returns (uint256 betValue) {
+        if (playerBet[msg.sender].teamSelected != winningTeam && winningTeam != 2) return 0;
+
+        uint256 bonusEther;
+
+        if (winningTeam == 0) {
+            bonusEther = awayTeamamount / homeTeamPlayers.length;
+        }
+        if (winningTeam == 1) {
+            bonusEther = homeTeamamount / awayTeamPlayers.length;
+        }
+        if (winningTeam == 2) {
+            bonusEther = 0;
+        }
+
+        return playerBet[msg.sender].amountBet + bonusEther;
+    }
+
     function getPlayers() public view returns (address payable[] memory playersArray) {
         return players;
     }

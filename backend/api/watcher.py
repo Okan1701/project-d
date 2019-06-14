@@ -65,6 +65,8 @@ class MatchWatcherService():
                 match.winning_team = 2
                 match.status_code = 2
 
+            match.active = False
+
             match.save()
             console.log(f"Updated match {match.id} status_code to 2, final scores have been updated")
             return True

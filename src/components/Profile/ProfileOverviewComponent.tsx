@@ -33,7 +33,7 @@ class ProfileOverviewComponent extends Component<IProps> {
                 <Card.Title>{this.props.player.name}</Card.Title>
                 <strong>Statistics:</strong><br/><br/>
                 <p>Wins: {this.props.player.wins}</p>
-                <p>Losses: {this.props.player.losses}</p>
+                <p>Total games: {this.props.player.game_count}</p>
                 {this.renderEarnings()}
             </Card.Body>
         );

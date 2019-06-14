@@ -3,6 +3,10 @@ import {IMatch, MatchWinningTeam} from "../../data/interfaces";
 import Alert from "sweetalert2";
 import Web3 from "web3";
 import Button from "react-bootstrap/Button";
+import * as web3utils from 'web3-utils';
+import BN from "bn.js";
+import * as database from "../../data/database";
+import {formatWeiAsEther} from "../../utils";
 
 const rouletteContractAbi = require("../../contracts/RouletteContract");
 
@@ -14,7 +18,8 @@ enum RewardClaimStatus {
 
 interface IState {
     isLoading: boolean,
-    canClaimReward: RewardClaimStatus
+    canClaimReward: RewardClaimStatus,
+    rewardValue: string
 }
 
 interface IProps {
@@ -28,7 +33,8 @@ class MatchClaimReward extends Component<IProps, IState> {
         super(props);
         this.state = {
             isLoading: true,
-            canClaimReward: RewardClaimStatus.NotPartOfTeam
+            canClaimReward: RewardClaimStatus.NotPartOfTeam,
+            rewardValue: ""
         };
     }
 
@@ -50,6 +56,9 @@ class MatchClaimReward extends Component<IProps, IState> {
 
         let canClaim: RewardClaimStatus = RewardClaimStatus.CanClaim;
 
+        /**
+         * Make sure user is eligable to claim reward
+         */
         switch (this.props.match.winning_team) {
             case MatchWinningTeam.HomeTeam:
                 if (!this.isInTeam(accountAddr, homeTeam)) canClaim = RewardClaimStatus.NotPartOfTeam;
@@ -68,9 +77,17 @@ class MatchClaimReward extends Component<IProps, IState> {
                 break;
         }
 
+        let rewardValue: string = "";
+        // if user can claim reward, get the reward value in ether format
+        if (canClaim === RewardClaimStatus.CanClaim) {
+            let res: BN = await contractInstance.methods.getRewardValue(this.props.match.winning_team).call({from: accountAddr});
+            rewardValue = res.toString();
+        }
+
         this.setState({
             isLoading: false,
-            canClaimReward: canClaim
+            canClaimReward: canClaim,
+            rewardValue: rewardValue
         });
     }
 
@@ -86,6 +103,10 @@ class MatchClaimReward extends Component<IProps, IState> {
         return false;
     }
 
+    /**
+     * Called when user clicks "Claim Reward" button
+     * Gets the contract instance, sends tx to getReward function and refreshes the match
+     */
     private async onButtonClick(): Promise<void> {
         // Get the specific contract instance that belongs to this match using its address
         const contractInstance = new this.props.web3.eth.Contract(rouletteContractAbi.abi, this.props.match.contract_address);
@@ -94,15 +115,24 @@ class MatchClaimReward extends Component<IProps, IState> {
 
         let method = contractInstance.methods.getReward(this.props.match.winning_team);
         await method.send({from: account});
+        await database.updatePlayerEarnings(account, parseInt(this.state.rewardValue));
+        await database.updatePlayerWins(account);
         await Alert.fire({
             title: "Done!",
             text: "Your reward has been claimed!",
             type: "success"
         });
-        this.props.refreshMatchFn(this.props.match);
 
+        // Callback function to MatchesArea that will refresh the current match data
+        this.props.refreshMatchFn(this.props.match);
     }
 
+    /**
+     * Check if user already claimed his reward from the contract
+     * @param contractInstance: instance of the contract that we player is trying to claim reward of
+     * @param account: string representation of wallet address
+     * @returns boolean: true if reward is claimed, false otherwise
+     */
     private async rewardIsAlreadyClaimed(contractInstance: any, account: string): Promise<boolean> {
         let method = contractInstance.methods.checkIfPlayerAlreadyClaimedReward();
         return await method.call({from: account});
@@ -128,7 +158,8 @@ class MatchClaimReward extends Component<IProps, IState> {
 
         return (
             <div>
-                <strong>Your chosen team has won! Press the button below to claim your rewards!</strong>
+                <strong>Your chosen team has won! Press the button below to claim your rewards!</strong><br/>
+                <strong>Your reward: </strong>{formatWeiAsEther(this.state.rewardValue)}
                 <br/><br/>
                 <Button onClick={() => this.onButtonClick().catch((e: Error) => Alert.fire({
                     title: e.name,

@@ -101,15 +101,19 @@ class MatchCreateForm extends Component<IProps, IState> {
         // Create a new match entry in the database
         let match: IMatch = {
             title: title,
+            owner: accounts[0],
             contract_address: contractInstance.options.address,
             start_date: formattedDate,
             active: true,
             sport_event_id: this.props.sportEvent.idEvent,
             status_code: MatchStatusCode.WaitingForMatchDate,
-            winning_team: MatchWinningTeam.None
+            winning_team: MatchWinningTeam.None,
+            network_name: await this.props.web3.eth.net.getNetworkType()
         };
         console.log(match);
         await database.createMatchEntry(match);
+        await database.updatePlayerEarnings(accounts[0], parseInt(wei.toString()) * -1);
+        await database.updatePlayerGameCount(accounts[0]);
         this.setState({isCreating: false});
         // noinspection JSIgnoredPromiseFromCall
         Alert.fire({title: "Done!", text: "Match has been sucesfully created!", type: "success", confirmButtonText: "Ok"});

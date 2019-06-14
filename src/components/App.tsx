@@ -61,6 +61,7 @@ class App extends Component<any, IState> {
         } else {
             web3Provider = new Web3(window.web3.currentProvider);
             web3Provider.eth.transactionConfirmationBlocks = 1;
+            console.log((await web3Provider.eth.net.getNetworkType()));
             this.setState({
                 loadingState: LoadingState.awaitProviderAuth,
                 web3: web3Provider

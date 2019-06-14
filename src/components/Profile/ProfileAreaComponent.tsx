@@ -6,6 +6,7 @@ import ProfileOverviewComponent from "./ProfileOverviewComponent";
 import {IPlayer} from "../../data/interfaces";
 import {getPlayer} from "../../data/database";
 import ProfileDeleteComponent from "./ProfileDeleteComponent";
+import ProfileMyMatches from "./ProfileMyMatches";
 
 enum ProfileArea {
     Overview,
@@ -32,7 +33,7 @@ class ProfileAreaComponent extends Component<IProps, IState> {
                 address: "Loading...",
                 name: "Loading...",
                 wins: 0,
-                losses: 0,
+                game_count: 0,
                 earnings: 0
             },
             playerLoaded: false
@@ -57,7 +58,7 @@ class ProfileAreaComponent extends Component<IProps, IState> {
             case ProfileArea.Overview:
                 return <ProfileOverviewComponent web3={this.props.web3} player={this.state.player}/>;
             case ProfileArea.MyMatches:
-                return <strong>My matches</strong>;
+                return <ProfileMyMatches web3={this.props.web3} />;
             case ProfileArea.DeleteProfile:
                 return <ProfileDeleteComponent player={this.state.player}/>
         }
