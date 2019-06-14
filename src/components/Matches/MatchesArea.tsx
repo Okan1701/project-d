@@ -10,6 +10,7 @@ import LoadingCard from "../Misc/LoadingCard";
 import MatchesList from "./MatchesList";
 import MatchOverview from "./MatchOverview";
 import * as web3utils from 'web3-utils';
+import {makeFirstCharUppercase} from "../../utils";
 
 const rouletteContractAbi = require("../../contracts/RouletteContract");
 
@@ -86,6 +87,12 @@ class MatchesArea extends Component<IWeb3Prop, IState> {
      * @returns true if participating, false otherwise
      */
     private async isParticipatingInMatch(accountAddr: string, match: IMatch): Promise<boolean> {
+        const networkName: string = await this.props.web3.eth.net.getNetworkType();
+        if (networkName !== match.network_name) {
+            console.log(`Target match is located at '${match.network_name}' while we are on '${networkName}!'`);
+            return false;
+        }
+
         // Get the specific contract instance that belongs to this match using its address
         const contractInstance: any = new this.props.web3.eth.Contract(rouletteContractAbi.abi, match.contract_address);
 
@@ -105,12 +112,25 @@ class MatchesArea extends Component<IWeb3Prop, IState> {
 
     /**
      * Loads the contract details of a specific match using it's contract address
-     * Once loaded, it will switch to the 'Match overview' tab on UI
+     * Once loaded, it will switch to the 'Match overview' tab on UI.
+     * This method will serve as callback func for MatchesList component
      * @param match: the IMatch object containing valid address
      */
-    private async getMatchDetails(match: IMatch) {
+    private async getMatchDetails(match: IMatch): Promise<void> {
         // Display loading screen
         this.setState({isLoading: true});
+
+        //First check if we are connected to the correct network
+        let currentNetworkName: string = await this.props.web3.eth.net.getNetworkType();
+        if (match.network_name !== currentNetworkName) {
+            await Alert.fire({
+                title: "Wrong Network!",
+                html: `The match you clicked on is located on a different blockchain network!<br/></br/> Please switch to the '${makeFirstCharUppercase(match.network_name)}' network in MetaMask.`,
+                type: "warning"
+            });
+            this.setState({isLoading: false});
+            return;
+        }
 
         // Get current selected account in MetaMask
         const accounts: string[] = await this.props.web3.eth.getAccounts();

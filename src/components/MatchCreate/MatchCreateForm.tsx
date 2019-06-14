@@ -107,7 +107,8 @@ class MatchCreateForm extends Component<IProps, IState> {
             active: true,
             sport_event_id: this.props.sportEvent.idEvent,
             status_code: MatchStatusCode.WaitingForMatchDate,
-            winning_team: MatchWinningTeam.None
+            winning_team: MatchWinningTeam.None,
+            network_name: await this.props.web3.eth.net.getNetworkType()
         };
         console.log(match);
         await database.createMatchEntry(match);

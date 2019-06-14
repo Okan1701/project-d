@@ -16,7 +16,8 @@ class MatchSerializer(ModelSerializer):
             "active",
             "sport_event_id",
             "status_code",
-            "winning_team"
+            "winning_team",
+            "network_name"
         )
 
 

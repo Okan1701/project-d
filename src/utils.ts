@@ -13,6 +13,10 @@ export function getStrValueWithLeadingZero(value: number): string {
     }
 }
 
+export function makeFirstCharUppercase(target: string): string {
+    return target.charAt(0).toUpperCase() + target.slice(1);
+}
+
 export function formatWeiAsEther(wei: string): string {
     return web3utils.fromWei(wei) + " Ether";
 }

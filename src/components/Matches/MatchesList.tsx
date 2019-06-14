@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {IMatch, ISportEvent, MatchStatusCode} from "../../data/interfaces";
 import Table from "react-bootstrap/Table";
 import Card from "react-bootstrap/Card";
-import {PaginatedArray} from "../../utils";
+import {makeFirstCharUppercase, PaginatedArray} from "../../utils";
 import Pagination from "react-bootstrap/Pagination";
 
 interface IState {
@@ -74,6 +74,7 @@ class MatchesList extends Component<IProps, IState> {
                         <th>Title</th>
                         <th>Event name</th>
                         <th>Created on</th>
+                        <th>Network name</th>
                         <th>Status</th>
                     </tr>
                     </thead>
@@ -84,6 +85,7 @@ class MatchesList extends Component<IProps, IState> {
                             <td>{m.title}</td>
                             <td>{this.getEventName(m.sport_event_data)}</td>
                             <td>{m.start_date}</td>
+                            <td>{makeFirstCharUppercase(m.network_name)}</td>
                             <td>{MatchStatusCode[m.status_code]}</td>
                         </tr>
                     ))}

@@ -10,7 +10,8 @@ export interface IMatch {
     sport_event_data?: ISportEvent, // Optional, used for convenience
     status_code: MatchStatusCode,
     winning_team: MatchWinningTeam,
-    contract_data?: IContractData // Optional, used for convenience
+    contract_data?: IContractData // Optional, used for convenience,
+    network_name: string
 }
 
 // Defines a player object

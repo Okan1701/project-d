@@ -5,13 +5,14 @@ from django.db import models
 
 class Match(models.Model):
     owner = models.CharField(max_length=256, default="")
-    title = models.CharField(max_length=40)
+    title = models.CharField(max_length=256)
     contract_address = models.CharField(max_length=256)
     start_date = models.DateField()
     active = models.BooleanField(default=True)
     sport_event_id = models.IntegerField(default=-1)
     status_code = models.IntegerField(default=0)
     winning_team = models.IntegerField(default=-1)
+    network_name = models.CharField(max_length=256, default="unknown")
 
     def __str__(self):
         return self.title + " @ " + self.contract_address
