@@ -52,7 +52,7 @@ class MatchOverview extends Component<IProps, any> {
                                              refreshMatchFn={this.props.refreshMatchFn}/>;
             case MatchStatusCode.CanClaimRewards:
                 return <MatchClaimReward web3={this.props.web3} match={this.props.match}
-                                         refreshMatchFn={this.props.refreshMatchFn}/>
+                                         refreshMatchFn={this.props.refreshMatchFn}/>;
             default:
                 return <MatchParticipateForm match={this.props.match} web3={this.props.web3}
                                              refreshMatchFn={this.props.refreshMatchFn}/>;
@@ -147,7 +147,7 @@ class MatchOverview extends Component<IProps, any> {
                         <Card>
                             <Card.Body>
                                 <strong>Total players: </strong>{this.props.match.contract_data.playerCount}<br/>
-                                <strong>Total bet value: </strong>{this.props.match.contract_data.totalBetValue}<br/>
+                                <strong>Total bet value: </strong>{this.props.match.contract_data.totalBetValue} Ether<br/>
                                 <strong>Status: </strong>{this.renderStatusText(this.props.match.status_code)}<br/>
                                 <strong>Winning
                                     team: </strong>{this.renderWinningTeamText(this.props.match.winning_team)}
