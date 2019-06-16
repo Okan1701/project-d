@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {IWeb3Prop} from "../Routing";
 import Card from "react-bootstrap/Card";
 import Nav from "react-bootstrap/Nav";
-import {IMatch, ISportEvent} from "../../data/interfaces";
+import {IMatch} from "../../data/interfaces";
 import * as database from "../../data/database";
 import * as sports from "../../data/sports";
 import Alert from 'sweetalert2'

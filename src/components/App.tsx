@@ -3,7 +3,7 @@ import '../css/App.css';
 import SiteNavbar from "./SiteNavbar";
 import Web3 from "web3";
 import Routing from "./Routing";
-import {BrowserRouter, HashRouter} from "react-router-dom";
+import {HashRouter} from "react-router-dom";
 import * as database from "../data/database";
 import RegisterComponent from "./RegisterComponent";
 import {IPlayer} from "../data/interfaces";

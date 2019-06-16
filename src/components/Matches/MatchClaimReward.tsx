@@ -3,7 +3,6 @@ import {IMatch, MatchWinningTeam} from "../../data/interfaces";
 import Alert from "sweetalert2";
 import Web3 from "web3";
 import Button from "react-bootstrap/Button";
-import * as web3utils from 'web3-utils';
 import BN from "bn.js";
 import * as database from "../../data/database";
 import {formatWeiAsEther} from "../../utils";

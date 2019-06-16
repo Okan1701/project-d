@@ -48,14 +48,18 @@ class MatchCreateForm extends Component<IProps, IState> {
         event.preventDefault();
         event.stopPropagation();
 
-        // Make sure the button is disabled and showing loading icon
-        this.setState({isCreating: true});
-
-
         // Get the ether that the user inputted and convert to wei
         const wei: BN = web3utils.toWei(form[2].value);
         const team: number = form[1].value;
         const title: string = form[0].value;
+
+        if (parseInt(wei.toString()) < 100000000000000000) {
+            Alert.fire({title: "Low Ether amount!", text: "You must bet atleast 0.1 Ether!", type: "info"});
+            return;
+        }
+
+        // Make sure the button is disabled and showing loading icon
+        this.setState({isCreating: true});
 
         this.createMatch(title, wei, team).then(
             () => console.log("Match has been created!"),

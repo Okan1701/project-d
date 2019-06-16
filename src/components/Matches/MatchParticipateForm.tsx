@@ -81,6 +81,12 @@ class MatchParticipateForm extends Component<IProps, IState> {
         const betValue: string = form[1].value;
         const wei: string = web3utils.toWei(betValue);
 
+        if (parseInt(wei.toString()) < 100000000000000000) {
+            await Alert.fire({title: "Low Ether amount!", text: "You must bet atleast 0.1 Ether!", type: "info"});
+            this.setState({isSendingBet: false});
+            return;
+        }
+
         // Get the specific contract instance that belongs to this match using its address
         const contractInstance: any = new this.props.web3.eth.Contract(rouletteContractAbi.abi, this.props.match.contract_address);
 
@@ -91,6 +97,7 @@ class MatchParticipateForm extends Component<IProps, IState> {
             value: wei.toString()
         });
         await database.updatePlayerEarnings(this.state.address, parseInt(wei) * -1);
+        await database.updatePlayerGameCount(this.state.address);
 
         await Alert.fire({title: "Done!", text: "Your bet has been succesfully submitted!", type: "success"});
         this.setState({isSendingBet: false});
