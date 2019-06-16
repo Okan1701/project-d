@@ -35,7 +35,27 @@ export async function getEventsFromDateRange(dateStart: Date, dateEnd: Date): Pr
     // For each date in the range, we will call getEventsAtDate and merge it results with the events array
     while (dateStart <= dateEnd) {
         let res: ISportEvent[] = await getEventsAtDate(dateStart);
-        events = events.concat(res);
+
+        // If the current date returned no events, then we can skip this date
+        if (res == null) {
+            dateStart.setDate(dateStart.getDate() + 1);
+            continue;
+        }
+
+        // An ugly null check so we can make sure all objects have the needed data
+        for (let i = 0; i < res.length; i++) {
+            if (res[i].idEvent == null) continue;
+            if (res[i].strLeague == null) continue;
+            if (res[i].strEvent == null) continue;
+            if (res[i].strTime == null) continue;
+            if (res[i].dateEvent == null) continue;
+            if (res[i].strAwayTeam == null) continue;
+            if (res[i].strTime == null) continue;
+            if (res[i].strHomeTeam == null) continue;
+            events.push(res[i]);
+        }
+
+        // Advance to the next day when this loop iteration is done
         dateStart.setDate(dateStart.getDate() + 1);
     }
 

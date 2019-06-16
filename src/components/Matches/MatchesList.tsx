@@ -63,6 +63,19 @@ class MatchesList extends Component<IProps, IState> {
         return items;
     }
 
+    private renderStatusText(status: MatchStatusCode) {
+        switch (status) {
+            case MatchStatusCode.WaitingForMatchDate:
+                return <div className="text-success">Waiting for players</div>;
+            case MatchStatusCode.Pending:
+                return <div className="text-warning">Awaiting match score</div>;
+            case MatchStatusCode.CanClaimRewards:
+                return <div className="text-danger">Match has ended</div>;
+            default:
+                return MatchStatusCode[status];
+        }
+    }
+
     public render() {
         return (
             <Card.Body>
@@ -86,7 +99,7 @@ class MatchesList extends Component<IProps, IState> {
                             <td>{this.getEventName(m.sport_event_data)}</td>
                             <td>{m.start_date}</td>
                             <td>{makeFirstCharUppercase(m.network_name)}</td>
-                            <td>{MatchStatusCode[m.status_code]}</td>
+                            <td>{this.renderStatusText(m.status_code)}</td>
                         </tr>
                     ))}
                     </tbody>

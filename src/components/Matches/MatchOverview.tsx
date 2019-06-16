@@ -48,11 +48,14 @@ class MatchOverview extends Component<IProps, any> {
     private renderUserOptions() {
         switch (this.props.match.status_code) {
             case MatchStatusCode.WaitingForMatchDate:
-                return <MatchParticipateForm match={this.props.match} web3={this.props.web3} refreshMatchFn={this.props.refreshMatchFn}/>;
+                return <MatchParticipateForm match={this.props.match} web3={this.props.web3}
+                                             refreshMatchFn={this.props.refreshMatchFn}/>;
             case MatchStatusCode.CanClaimRewards:
-                return <MatchClaimReward web3={this.props.web3} match={this.props.match} refreshMatchFn={this.props.refreshMatchFn}/>
+                return <MatchClaimReward web3={this.props.web3} match={this.props.match}
+                                         refreshMatchFn={this.props.refreshMatchFn}/>
             default:
-                return <MatchParticipateForm match={this.props.match} web3={this.props.web3} refreshMatchFn={this.props.refreshMatchFn}/>;
+                return <MatchParticipateForm match={this.props.match} web3={this.props.web3}
+                                             refreshMatchFn={this.props.refreshMatchFn}/>;
         }
     }
 
@@ -71,7 +74,11 @@ class MatchOverview extends Component<IProps, any> {
         }
 
         // if code reaches here, it means it failed to find host player name
-        Swal.fire({title: "An error occured!", text: "Failed to load name of host player! Host player is not part of match", type: "error"});
+        Swal.fire({
+            title: "An error occured!",
+            text: "Failed to load name of host player! Host player is not part of match",
+            type: "error"
+        });
         throw new Error("Failed loading host player name. Host address is not part of any contract team");
     }
 
@@ -93,6 +100,19 @@ class MatchOverview extends Component<IProps, any> {
     private renderIsArchivedAlert() {
         if (!this.props.match.active) {
             return <Alert variant="secondary">This match is archived</Alert>
+        }
+    }
+
+    private renderStatusText(status: MatchStatusCode): string {
+        switch (status) {
+            case MatchStatusCode.WaitingForMatchDate:
+                return "Waiting for players";
+            case MatchStatusCode.Pending:
+                return "Awaiting match score";
+            case MatchStatusCode.CanClaimRewards:
+                return "Match has ended";
+            default:
+                return MatchStatusCode[status];
         }
     }
 
@@ -128,8 +148,9 @@ class MatchOverview extends Component<IProps, any> {
                             <Card.Body>
                                 <strong>Total players: </strong>{this.props.match.contract_data.playerCount}<br/>
                                 <strong>Total bet value: </strong>{this.props.match.contract_data.totalBetValue}<br/>
-                                <strong>Status: </strong>{MatchStatusCode[this.props.match.status_code]}<br/>
-                                <strong>Winning team: </strong>{this.renderWinningTeamText(this.props.match.winning_team)}
+                                <strong>Status: </strong>{this.renderStatusText(this.props.match.status_code)}<br/>
+                                <strong>Winning
+                                    team: </strong>{this.renderWinningTeamText(this.props.match.winning_team)}
                             </Card.Body>
                         </Card>
                         <br/>
@@ -139,7 +160,7 @@ class MatchOverview extends Component<IProps, any> {
                 <hr/>
                 {this.renderUserOptions()}
                 <hr/>
-                <MatchDebugOptions match={this.props.match} refreshMatchFn={this.props.refreshMatchFn} />
+                <MatchDebugOptions match={this.props.match} refreshMatchFn={this.props.refreshMatchFn}/>
             </Card.Body>
         );
     }
