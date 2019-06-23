@@ -16,4 +16,17 @@ declare global {
         [key: number]: any
     }
 
+    interface IContractData {
+        playerCount: number,
+        totalBetValue: string,
+        homeTeamPlayers: IContractPlayer[],
+        awayTeamPlayers: IContractPlayer[],
+    }
+
+    interface IContractPlayer {
+        address: string
+        name: string,
+        betValue: string
+    }
+
 }

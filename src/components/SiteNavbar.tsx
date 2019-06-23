@@ -4,6 +4,8 @@ import Nav from "react-bootstrap/Nav";
 import {Link} from "react-router-dom";
 import {IPlayer} from "../data/interfaces";
 
+const brandImg = require("../images/brand.png");
+
 interface IState {
     selectedNavBtn: number
 }
@@ -48,7 +50,7 @@ class SiteNavbar extends Component<IProps, IState> {
 
     private handleScroll(): void {
         let navbar: Element = document.getElementsByClassName("navbar")[0];
-        if (window.scrollY != 0) {
+        if (window.scrollY !== 0) {
             navbar.classList.add("navbar-shadow");
         } else {
             navbar.classList.remove("navbar-shadow");
@@ -74,8 +76,8 @@ class SiteNavbar extends Component<IProps, IState> {
             <Navbar variant="dark" expand="lg">
                 <Navbar.Brand as={Link} to="/" onClick={() => this.setState({selectedNavBtn: 0})}>
                     <img
-                        src="https://yt3.ggpht.com/a/AGF-l7-BuJETOnFhNI2w3WJF163XAa1e13BtRP6znQ=s900-mo-c-c0xffffffff-rj-k-no"
-                        width="30" height="30" alt="Logo brand"/> EasyBet</Navbar.Brand>
+                        src={brandImg}
+                        width="90" height="35" alt="Logo brand"/></Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                     {this.renderLinks()}

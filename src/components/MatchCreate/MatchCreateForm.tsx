@@ -9,15 +9,16 @@ import * as database from "../../data/database";
 import BN from "bn.js";
 import Contract from "web3/eth/contract";
 import Spinner from "react-bootstrap/Spinner";
-import PopUpComponent from "../Misc/PopUpComponent";
-import {IMatch, ISportEvent} from "../../data/interfaces";
+import {IMatch, ISportEvent, MatchStatusCode, MatchWinningTeam} from "../../data/interfaces";
+import Alert from 'sweetalert2'
 
 
 const abi: any = require("../../contracts/RouletteContract");
 
 interface IState {
-    onCreate: boolean,
     isCreating: boolean,
+    contract?: Contract,
+    account: string,
 }
 
 interface IProps {
@@ -31,10 +32,10 @@ class MatchCreateForm extends Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
-            onCreate: false,
             isCreating: false,
+            account: "",
+            contract: undefined,
         };
-        this.closePopup = this.closePopup.bind(this);
     }
 
     /**
@@ -47,18 +48,23 @@ class MatchCreateForm extends Component<IProps, IState> {
         event.preventDefault();
         event.stopPropagation();
 
+        // Get the ether that the user inputted and convert to wei
+        const wei: BN = web3utils.toWei(form[2].value);
+        const team: number = form[1].value;
+        const title: string = form[0].value;
+
+        if (parseInt(wei.toString()) < 100000000000000000) {
+            Alert.fire({title: "Low Ether amount!", text: "You must bet atleast 0.1 Ether!", type: "info"});
+            return;
+        }
+
         // Make sure the button is disabled and showing loading icon
         this.setState({isCreating: true});
 
-
-        // Get the ether that the user inputted and convert to wei
-        const wei: BN = web3utils.toWei(form[1].value);
-        const title: string = form[0].value;
-
-        this.createMatch(title, wei).then(
+        this.createMatch(title, wei, team).then(
             () => console.log("Match has been created!"),
-            (reason: string) => {
-                alert(reason);
+            (e: Error) => {
+                Alert.fire({title: e.name, text: e.message, type: "error", confirmButtonText: "Ok"});
                 this.setState({isCreating: false});
             }
         )
@@ -70,9 +76,9 @@ class MatchCreateForm extends Component<IProps, IState> {
      *  Details of the contract will also be saved to database
      *  @param title: The name of the match. Will be saved to db
      *  @param wei: The amount of ether in 'wei' format
+     *  @param selectedTeam: the team that the user selected 0 = home team, 1 = away team
      */
-    private async createMatch(title: string, wei: BN): Promise<void> {
-
+    private async createMatch(title: string, wei: BN, selectedTeam: number): Promise<void> {
         // Get the user accounts that are available in MetaMask
         const accounts: string[] = await this.props.web3.eth.getAccounts();
         // Create the contract object that we will use to deploy and interact with the contract
@@ -80,22 +86,41 @@ class MatchCreateForm extends Component<IProps, IState> {
 
         // Deploy a new instance of the contract and send a transaction to it containing the bet value
         // The new instance will be stored in contractInstance
-        let tx: any = contract.deploy({data: abi.bytecode, arguments: []});
+        let tx: any = contract.deploy({data: abi.bytecode,arguments: [selectedTeam]});
         let contractInstance: Contract = await tx.send({
             from: accounts[0], // Account of the sender
             value: wei.toString() // The bet value in wei
         });
 
+/*      let method = contract.methods.bet(1);
+      await method.send({
+        from: accounts[0],
+        value: wei.toString()
+      });*/
+
+        let date: Date = new Date();
+        let formattedDate: string = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
+        console.log(formattedDate);
+
         // Create a new match entry in the database
         let match: IMatch = {
             title: title,
+            owner: accounts[0],
             contract_address: contractInstance.options.address,
-            start_date: "2019-05-05",
-            end_date: "2019-05-05",
-            active: true
+            start_date: formattedDate,
+            active: true,
+            sport_event_id: this.props.sportEvent.idEvent,
+            status_code: MatchStatusCode.WaitingForMatchDate,
+            winning_team: MatchWinningTeam.None,
+            network_name: await this.props.web3.eth.net.getNetworkType()
         };
+        console.log(match);
         await database.createMatchEntry(match);
-        this.setState({onCreate: true, isCreating: false});
+        await database.updatePlayerEarnings(accounts[0], parseInt(wei.toString()) * -1);
+        await database.updatePlayerGameCount(accounts[0]);
+        this.setState({isCreating: false});
+        // noinspection JSIgnoredPromiseFromCall
+        Alert.fire({title: "Done!", text: "Match has been sucesfully created!", type: "success", confirmButtonText: "Ok"});
 
     }
 
@@ -114,21 +139,10 @@ class MatchCreateForm extends Component<IProps, IState> {
         return null;
     }
 
-    /**
-     * Hides the confirmation popup that is shown when match is created
-     * This is done by setting onCreate of the state to false
-     */
-    public closePopup(): void {
-        this.setState({onCreate: false})
-    }
-
     public render(): React.ReactNode {
         if (!this.props.show) return null;
 
         return <div>
-
-            <PopUpComponent title="Confirmation" message="Your match has been created!" onClose={this.closePopup}
-                            show={this.state.onCreate}/>
             <Card>
                 <Card.Body>
                     <Card.Title>Enter new match details</Card.Title>
@@ -141,7 +155,16 @@ class MatchCreateForm extends Component<IProps, IState> {
                             <Form.Control type="text" placeholder="Enter match title here..." required/>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Label>Your bet</Form.Label>
+                            <Form.Label>Select Team:</Form.Label>
+                          
+                            <Form.Control as="select">
+                              <option value={0}>{this.props.sportEvent.strHomeTeam}</option>
+                              <option value={1}>{this.props.sportEvent.strAwayTeam}</option>
+                            </Form.Control>
+
+                        </Form.Group>
+                      <Form.Group>
+                        <Form.Label>Your bet</Form.Label>
                             <InputGroup>
                                 <InputGroup.Prepend>
                                     <InputGroup.Text id="inputGroupPrepend">ETH</InputGroup.Text>
@@ -150,8 +173,11 @@ class MatchCreateForm extends Component<IProps, IState> {
                                               required/>
                             </InputGroup>
                         </Form.Group>
+                      <p>Keep in mind there are some small fees to create a match. These fees will be visible in
+                        the metamask extension once you click the create button. </p>
                         <p>Once you have created the match, other users will be able to see it and even participate
                             in it with their own ether!</p>
+
                             <Button type="submit"
                                     disabled={this.state.isCreating}>{this.createLoadingSpinner()} Create</Button>
                             <Button variant="light" style={{marginLeft: "10px"}} onClick={this.props.onReturnClick}>Select another match</Button>

@@ -3,10 +3,12 @@ import '../css/App.css';
 import SiteNavbar from "./SiteNavbar";
 import Web3 from "web3";
 import Routing from "./Routing";
-import {BrowserRouter} from "react-router-dom";
+import {HashRouter} from "react-router-dom";
 import * as database from "../data/database";
 import RegisterComponent from "./RegisterComponent";
 import {IPlayer} from "../data/interfaces";
+import Card from "react-bootstrap/Card";
+import SiteLoading from "./SiteLoading";
 
 enum LoadingState {
     detectProvider,
@@ -51,6 +53,9 @@ class App extends Component<any, IState> {
 
     }
 
+    /**
+     * Initialize the Web3 module and load user account
+     */
     private async init(): Promise<void> {
         let web3Provider: Web3;
 
@@ -61,6 +66,7 @@ class App extends Component<any, IState> {
         } else {
             web3Provider = new Web3(window.web3.currentProvider);
             web3Provider.eth.transactionConfirmationBlocks = 1;
+            console.log((await web3Provider.eth.net.getNetworkType()));
             this.setState({
                 loadingState: LoadingState.awaitProviderAuth,
                 web3: web3Provider
@@ -103,32 +109,104 @@ class App extends Component<any, IState> {
     public render(): ReactNode {
         switch (this.state.loadingState) {
             case LoadingState.detectProvider:
-                return <strong>Detecting Web3 provider...</strong>;
+                return <SiteLoading loadingMsg="Detecting Web3 provider"/>;
             case LoadingState.noProvider:
-                return <strong>No web3 provider found!</strong>;
+                return (
+                    <div>
+                        <HashRouter>
+                            <SiteNavbar showContent={false}/>
+                        </HashRouter>
+                        <div className={"register-form"}>
+                            <br/>
+                            <Card>
+                                <Card.Body>
+                                    <h3>Welcome to our Ethereum sport betting website!</h3>
+                                    <br/>
+                                    <Card.Title>You do not have MetaMask installed</Card.Title>
+                                    <p>
+                                        In order to use this website, you are required to install the extension
+                                        MetaMask. To get this extension go to
+                                        the add-on store of your preferred browser.
+                                    </p>
+                                    <strong>
+                                        Supported Browsers:
+                                    </strong>
+                                    <ul>
+                                        <li>Chrome</li>
+                                        <li>Firefox</li>
+                                        <li>Opera</li>
+                                        <li>Brave</li>
+                                    </ul>
+                                    <p>For more information, visit the official MetaMask website:</p>
+                                    <a href={"https://metamask.io/"}>https://metamask.io/</a>
+                                    <br/>
+                                    <br/>
+                                    <strong>If you have MetaMask installed, please try to refresh the page</strong>
+                                    <br/>
+                                </Card.Body>
+                            </Card>
+                        </div>
+                    </div>
+                )
             case LoadingState.awaitProviderAuth:
-                return <strong>Awaiting permission from MetaMask</strong>;
+                return <SiteLoading loadingMsg="Authenticating user"/>;
             case LoadingState.providerAuthFailed:
-                return <strong>You are not logged in MetaMask!</strong>;
+                return (
+                    <div>
+                        <HashRouter>
+                            <SiteNavbar showContent={false}/>
+                        </HashRouter>
+                        <div className={"register-form"}>
+                            <br/>
+                            <Card>
+                                <Card.Body>
+                                    <h3>Welcome to our Ethereum sport betting website!</h3>
+                                    <br/>
+                                    <Card.Title>You are not logged in to MetaMask</Card.Title>
+                                    <p>
+                                        In order to use this website, you are required to log in into MetaMask. You can
+                                        do so by clicking the MetaMask icon in the top right corner of your browser.
+                                    </p>
+                                    <strong>
+                                        Supported Browsers:
+                                    </strong>
+                                    <ul>
+                                        <li>Chrome</li>
+                                        <li>Firefox</li>
+                                        <li>Opera</li>
+                                        <li>Brave</li>
+                                    </ul>
+                                    <p>If you haven't used MetaMask before or need help, visit the official MetaMask
+                                        website for more information:</p>
+                                    <a href={"https://metamask.io/"}>https://metamask.io/</a>
+                                    <br/>
+                                    <br/>
+                                    <strong>If you have logged in to MetaMask, please try to refresh the page </strong>
+                                    <br/>
+                                </Card.Body>
+                            </Card>
+                        </div>
+                    </div>
+                );
             case LoadingState.notRegistered:
                 return (
-                    <BrowserRouter>
+                    <HashRouter>
                         <SiteNavbar showContent={false}/>
                         <br/>
                         <RegisterComponent accounts={this.state.accounts}
                                            onRegisteredCallback={() => this.onRegistered()}/>
-                    </BrowserRouter>
+                    </HashRouter>
                 );
             case LoadingState.loaded:
                 return (
-                    <BrowserRouter>
+                    <HashRouter>
                         <SiteNavbar showContent={true} player={this.state.player}/>
                         <br/>
                         <Routing web3={this.state.web3 as Web3} player={this.state.player as IPlayer}/>
-                    </BrowserRouter>
+                    </HashRouter>
                 );
             default:
-                return <strong>An undefined error occured! State: {this.state.loadingState}</strong>
+                return <strong>An undefined error occured! State: {LoadingState[this.state.loadingState]}</strong>
         }
     }
 }

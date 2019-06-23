@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import ButtonGroup from "react-bootstrap/ButtonGroup";
 import * as database from "../data/database";
 import {IPlayer} from "../data/interfaces";
+import Alert from 'sweetalert2'
 
 interface IState {
     showInfo: boolean
@@ -43,7 +44,12 @@ class RegisterComponent extends Component<IProps, IState> {
 
         // Check if user repeated the password correctly
         if (inputPassword !== inputPasswordRepeat) {
-            alert("The passwords that you entered do not match!");
+            Alert.fire({
+                title: "Invalid password!",
+                text: "The passwords that you entered do not match!",
+                type: 'error',
+                confirmButtonText: 'Ok'
+            });
             return;
         }
 
@@ -52,16 +58,28 @@ class RegisterComponent extends Component<IProps, IState> {
             address: this.props.accounts[0],
             name: inputName,
             wins: 0,
-            losses: 0,
+            game_count: 0,
             earnings: 0
         };
         database.registerPlayer(player).then(
             () => {
-                alert("Registration successful!");
-                this.props.onRegisteredCallback();
+                Alert.fire({
+                    title: 'Success!',
+                    text: "Your account has been successfully created!",
+                    type: 'success',
+                    confirmButtonText: 'Ok'
+                }).then(() => {
+                    this.props.onRegisteredCallback();
+                })
+
             },
             (e: Error) => {
-                alert("An error occured during registration!");
+                Alert.fire({
+                    title: e.name,
+                    text: e.message,
+                    type: 'error',
+                    confirmButtonText: 'Ok'
+                });
                 console.log(e);
             }
         );
