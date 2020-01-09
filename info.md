@@ -23,7 +23,7 @@ Inside render method, the routing is defined.
 
 #### MainArea.tsx
 
-This is the current home page of our website. Currently all it does is display the wallet address of the current MetaMask account.
+This is the current home page of our website. Currently all it does is display the wallet address of the current MetaMask account. It will also display some basic info and a interactive image slide
 <br>Nothing else happens here at the moment.
 
 #### MatchCreateAreaLegacy.tsx
